@@ -880,6 +880,124 @@
     font-size: 12.5px;
     font-style: italic;
   }
+
+  /* PRIORITY BADGE */
+  .priority-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+    padding: 2px 7px; border-radius: 4px; margin-bottom: 5px;
+  }
+  .priority-high   { background: rgba(192,85,85,0.12);  color: #b04040; }
+  .priority-medium { background: rgba(201,140,60,0.14); color: #a06020; }
+  .priority-low    { background: rgba(42,111,168,0.12); color: var(--blue); }
+
+  /* Priority left-border stripe on card */
+  .card[data-priority="high"]   { border-left: 3px solid #c05555; }
+  .card[data-priority="medium"] { border-left: 3px solid #c9884c; }
+  .card[data-priority="low"]    { border-left: 3px solid var(--blue); }
+
+  /* Within-column drag-to-reorder indicator */
+  .card.drop-above { box-shadow: 0 -3px 0 0 var(--accent), var(--card-shadow); }
+  .card.drop-below { box-shadow: 0 3px 0 0 var(--accent), var(--card-shadow); }
+
+  /* CHROME SPLASH & FOLDER PICKER OVERLAYS */
+  .fs-overlay {
+    position: fixed; inset: 0; z-index: 3000;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(10,30,50,0.72); backdrop-filter: blur(12px);
+  }
+  .fs-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 44px 52px;
+    max-width: 420px; width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,30,60,0.3);
+  }
+  .fs-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 600;
+    color: var(--text); margin-bottom: 12px;
+  }
+  .fs-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+  .fs-card .fs-icon { font-size: 48px; margin-bottom: 16px; }
+  .fs-card .btn-primary {
+    background: var(--accent); color: white;
+    border: none; padding: 11px 28px;
+    border-radius: 10px; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .fs-card .btn-primary:hover { opacity: 0.88; }
+
+  /* BOARD SWITCHER */
+  .board-switcher-wrap { position: relative; flex-shrink: 0; }
+  .board-switcher-btn {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 9px; padding: 5px 12px;
+    cursor: pointer; font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 600; color: var(--text);
+    transition: background 0.15s;
+    white-space: nowrap; max-width: 200px;
+  }
+  .board-switcher-btn:hover { background: rgba(255,255,255,0.45); }
+  .board-switcher-btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .board-switcher-btn svg { flex-shrink: 0; opacity: 0.6; }
+  .board-switcher-dropdown {
+    display: none; position: absolute; top: calc(100% + 6px); left: 0;
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 12px; box-shadow: 0 8px 32px rgba(0,30,60,0.18);
+    min-width: 220px; padding: 6px; z-index: 200;
+  }
+  .board-switcher-dropdown.open { display: block; }
+  .bs-board-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px; border-radius: 7px; gap: 8px;
+  }
+  .bs-board-item:hover { background: var(--accent-light); }
+  .bs-board-item.bs-active { background: var(--accent-light); }
+  .bs-board-name {
+    font-size: 13px; font-weight: 500; color: var(--text);
+    cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .bs-active .bs-board-name { color: var(--accent); font-weight: 600; }
+  .bs-board-actions { display: flex; gap: 3px; opacity: 0; transition: opacity 0.15s; }
+  .bs-board-item:hover .bs-board-actions { opacity: 1; }
+  .bs-action-btn {
+    font-size: 11px; padding: 2px 6px; border-radius: 5px;
+    border: 1px solid var(--col-border); background: white;
+    cursor: pointer; color: var(--text-muted); line-height: 1;
+  }
+  .bs-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .bs-action-btn.bs-delete:hover { border-color: var(--red); color: var(--red); }
+  .bs-divider { height: 1px; background: var(--col-border); margin: 5px 4px; }
+  .bs-new-btn, .bs-folder-btn {
+    width: 100%; text-align: left; padding: 8px 10px;
+    font-size: 12.5px; font-weight: 500; border: none;
+    background: none; cursor: pointer; border-radius: 7px;
+    color: var(--accent);
+  }
+  .bs-new-btn:hover, .bs-folder-btn:hover { background: var(--accent-light); }
+  .bs-folder-btn { color: var(--text-muted); }
+
+  /* PRIORITY PICKER in modal */
+  .priority-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .priority-btn {
+    font-size: 11.5px; font-weight: 600; padding: 4px 12px;
+    border-radius: 6px; border: 1.5px solid transparent;
+    cursor: pointer; background: rgba(0,0,0,0.05); color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .priority-btn:hover { border-color: currentColor; opacity: 0.85; }
+  .priority-btn.active-priority { border-color: currentColor; }
+  .priority-btn.pb-high   { color: #b04040; }
+  .priority-btn.pb-high.active-priority   { background: rgba(192,85,85,0.12); }
+  .priority-btn.pb-medium { color: #a06020; }
+  .priority-btn.pb-medium.active-priority { background: rgba(201,140,60,0.14); }
+  .priority-btn.pb-low    { color: var(--blue); }
+  .priority-btn.pb-low.active-priority    { background: rgba(42,111,168,0.12); }
 </style>
 </head>
 <body>
@@ -889,7 +1007,13 @@
 
 <!-- HEADER -->
 <header>
-  <h1>Home <span>Board</span></h1>
+  <div class="board-switcher-wrap">
+    <button class="board-switcher-btn" onclick="toggleBoardSwitcher()">
+      <span id="activeBoardName">Board</span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="board-switcher-dropdown" id="boardSwitcherDropdown"></div>
+  </div>
 
   <div class="header-search">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -900,12 +1024,13 @@
 
   <div class="header-filters">
     <button class="filter-pill active" data-label="all" onclick="setLabelFilter('all', this)">All</button>
-    <button class="filter-pill" data-label="shopping" onclick="setLabelFilter('shopping', this)">🛒 Shopping</button>
-    <button class="filter-pill" data-label="eating" onclick="setLabelFilter('eating', this)">🍽️ Eating Out</button>
-    <button class="filter-pill" data-label="home" onclick="setLabelFilter('home', this)">🏠 Home</button>
-    <button class="filter-pill" data-label="garden" onclick="setLabelFilter('garden', this)">🌿 Garden</button>
-    <button class="filter-pill" data-label="personal" onclick="setLabelFilter('personal', this)">✨ Personal</button>
-    <button class="filter-pill" data-label="other" onclick="setLabelFilter('other', this)">📌 Other</button>
+    <button class="filter-pill" data-label="feature" onclick="setLabelFilter('feature', this)">🚀 Feature</button>
+    <button class="filter-pill" data-label="discovery" onclick="setLabelFilter('discovery', this)">🔍 Discovery</button>
+    <button class="filter-pill" data-label="stakeholder" onclick="setLabelFilter('stakeholder', this)">👥 Stakeholder</button>
+    <button class="filter-pill" data-label="planning" onclick="setLabelFilter('planning', this)">🗺️ Planning</button>
+    <button class="filter-pill" data-label="release" onclick="setLabelFilter('release', this)">🚢 Release</button>
+    <button class="filter-pill" data-label="bug" onclick="setLabelFilter('bug', this)">🐛 Bug</button>
+    <button class="filter-pill" data-label="admin" onclick="setLabelFilter('admin', this)">📋 Admin</button>
   </div>
 
   <div class="header-actions">
@@ -914,6 +1039,26 @@
     <label class="btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
   </div>
 </header>
+
+<!-- CHROME REQUIRED SPLASH -->
+<div class="fs-overlay" id="chromeSplash" style="display:none">
+  <div class="fs-card">
+    <div class="fs-icon">🌐</div>
+    <h2>Chrome Required</h2>
+    <p>This board uses the <strong>File System Access API</strong> to save your data directly to a folder on your Mac — no database needed, and no storage limits.</p>
+    <p>This API is only supported in <strong>Google Chrome</strong>. Please open this file in Chrome to continue.</p>
+  </div>
+</div>
+
+<!-- FOLDER PICKER -->
+<div class="fs-overlay" id="folderPickerOverlay" style="display:none">
+  <div class="fs-card">
+    <div class="fs-icon">📁</div>
+    <h2>Choose a folder</h2>
+    <p>Pick a folder on your Mac where your boards will be saved as JSON files. A folder on <strong>OneDrive</strong> gives you automatic backups.</p>
+    <button class="btn-primary" onclick="pickFolder()">Choose folder…</button>
+  </div>
+</div>
 
 <!-- BOARD -->
 <div class="board" id="board">
@@ -932,6 +1077,15 @@
     </div>
     <div class="modal-body">
       <div class="modal-status-row" id="modalStatusRow"></div>
+
+      <!-- Priority -->
+      <div style="margin-bottom:14px">
+        <div class="modal-section-label" style="margin-bottom:4px">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+          Priority
+        </div>
+        <div class="priority-row" id="modalPriorityRow"></div>
+      </div>
 
       <!-- Description -->
       <div class="modal-section">
@@ -1045,12 +1199,13 @@ const COLUMNS = [
 ];
 
 const LABELS = [
-  { id: 'shopping', emoji: '🛒', name: 'Shopping',   color: '#4a72a8', bg: '#e2eaf5' },
-  { id: 'eating',   emoji: '🍽️', name: 'Eating Out', color: '#c97d4e', bg: '#f4e8db' },
-  { id: 'home',     emoji: '🏠', name: 'Home',       color: '#7a5fa8', bg: '#ede8f5' },
-  { id: 'garden',   emoji: '🌿', name: 'Garden',     color: '#5a8a6a', bg: '#e2efe6' },
-  { id: 'personal', emoji: '✨', name: 'Personal',   color: '#c9a84c', bg: '#faf3e0' },
-  { id: 'other',    emoji: '📌', name: 'Other',      color: '#9a9082', bg: '#f0ede8' },
+  { id: 'feature',     emoji: '🚀', name: 'Feature',     color: '#2a7fad', bg: '#daeef8' },
+  { id: 'discovery',   emoji: '🔍', name: 'Discovery',   color: '#6a5fa8', bg: '#e8e4f8' },
+  { id: 'stakeholder', emoji: '👥', name: 'Stakeholder', color: '#c97d4e', bg: '#f4e8db' },
+  { id: 'planning',    emoji: '🗺️', name: 'Planning',    color: '#2a6fa8', bg: '#d4e8f8' },
+  { id: 'release',     emoji: '🚢', name: 'Release',     color: '#3a8a6a', bg: '#d4f0e4' },
+  { id: 'bug',         emoji: '🐛', name: 'Bug',         color: '#c05555', bg: '#f5e2e2' },
+  { id: 'admin',       emoji: '📋', name: 'Admin',       color: '#9a9082', bg: '#f0ede8' },
 ];
 
 let state = { cards: [], archive: [] };
@@ -1058,16 +1213,204 @@ let currentLabelFilter = 'all';
 let currentSearchFilter = '';
 let openCardId = null;
 let dragSrcId = null;
+let dirHandle = null;
+let boards = [];
+let activeBoardId = null;
 
-function loadState() {
-  try {
-    const saved = localStorage.getItem('homeKanban');
-    if (saved) state = JSON.parse(saved);
-  } catch(e) {}
+// ─── BROWSER DETECTION ───────────────────────────────────────────────────────
+function isChrome() {
+  return /Chrome\//.test(navigator.userAgent)
+    && !/Edg\//.test(navigator.userAgent)
+    && !/OPR\//.test(navigator.userAgent);
 }
 
+// ─── INDEXEDDB: persist directory handle across sessions ─────────────────────
+function idbOp(mode, fn) {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('kanban_fs', 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore('handles');
+    req.onsuccess = e => {
+      try {
+        const tx = e.target.result.transaction('handles', mode);
+        fn(tx.objectStore('handles'), resolve, reject);
+      } catch(err) { reject(err); }
+    };
+    req.onerror = reject;
+  });
+}
+async function storeHandle(h) {
+  return idbOp('readwrite', (s, res, rej) => { const r = s.put(h,'dir'); r.onsuccess=res; r.onerror=rej; });
+}
+async function getStoredHandle() {
+  return idbOp('readonly', (s, res, rej) => { const r = s.get('dir'); r.onsuccess=()=>res(r.result); r.onerror=rej; });
+}
+
+// ─── FILE UTILITIES ───────────────────────────────────────────────────────────
+async function readJsonFile(name) {
+  try {
+    const fh = await dirHandle.getFileHandle(name);
+    return JSON.parse(await (await fh.getFile()).text());
+  } catch(e) { return null; }
+}
+async function writeJsonFile(name, data) {
+  const fh = await dirHandle.getFileHandle(name, { create: true });
+  const w  = await fh.createWritable();
+  await w.write(JSON.stringify(data, null, 2));
+  await w.close();
+}
+
+// ─── SAVE / LOAD (file-based) ─────────────────────────────────────────────────
 function saveState() {
-  localStorage.setItem('homeKanban', JSON.stringify(state));
+  if (!dirHandle || !activeBoardId) return;
+  writeJsonFile(`board_${activeBoardId}.json`, state).catch(() => {
+    showToast('⚠ Could not save — check folder access');
+  });
+}
+
+// ─── BOARD INDEX ──────────────────────────────────────────────────────────────
+async function saveBoardIndex() { await writeJsonFile('boards.json', boards); }
+
+// ─── FOLDER PICKER ────────────────────────────────────────────────────────────
+async function pickFolder() {
+  try {
+    const h = await window.showDirectoryPicker({ mode: 'readwrite' });
+    dirHandle = h;
+    await storeHandle(h);
+    document.getElementById('folderPickerOverlay').style.display = 'none';
+    await initBoards();
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Could not access folder');
+  }
+}
+
+// ─── BOARD OPERATIONS ────────────────────────────────────────────────────────
+async function switchBoard(id) {
+  activeBoardId = id;
+  localStorage.setItem('homeKanban_lastBoard', id);
+  state = await readJsonFile(`board_${activeBoardId}.json`) || { cards: [], archive: [] };
+  document.getElementById('activeBoardName').textContent =
+    boards.find(b => b.id === id)?.name || 'Board';
+  closeBoardSwitcher();
+  currentLabelFilter = 'all';
+  currentSearchFilter = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelector('.filter-pill[data-label="all"]').classList.add('active');
+  renderAllCards();
+}
+
+async function createBoard(name) {
+  const id = genId();
+  boards.push({ id, name, created: Date.now() });
+  await saveBoardIndex();
+  await writeJsonFile(`board_${id}.json`, { cards: [], archive: [] });
+  return id;
+}
+
+async function renameBoard(id, newName) {
+  const board = boards.find(b => b.id === id);
+  if (!board) return;
+  board.name = newName;
+  await saveBoardIndex();
+  if (id === activeBoardId)
+    document.getElementById('activeBoardName').textContent = newName;
+  renderBoardSwitcherDropdown();
+}
+
+async function deleteBoard(id) {
+  if (boards.length <= 1) { showToast('Cannot delete the last board'); return; }
+  const name = boards.find(b => b.id === id)?.name;
+  if (!confirm(`Delete board "${name}"? This cannot be undone.`)) return;
+  boards = boards.filter(b => b.id !== id);
+  await saveBoardIndex();
+  try { await dirHandle.removeEntry(`board_${id}.json`); } catch(e) {}
+  if (id === activeBoardId) await switchBoard(boards[0].id);
+  else renderBoardSwitcherDropdown();
+}
+
+// ─── BOARD SWITCHER UI ───────────────────────────────────────────────────────
+function toggleBoardSwitcher() {
+  const dd = document.getElementById('boardSwitcherDropdown');
+  if (dd.classList.contains('open')) { closeBoardSwitcher(); return; }
+  renderBoardSwitcherDropdown();
+  dd.classList.add('open');
+}
+
+function closeBoardSwitcher() {
+  document.getElementById('boardSwitcherDropdown')?.classList.remove('open');
+}
+
+function renderBoardSwitcherDropdown() {
+  const dd = document.getElementById('boardSwitcherDropdown');
+  dd.innerHTML = boards.map(b => `
+    <div class="bs-board-item ${b.id === activeBoardId ? 'bs-active' : ''}">
+      <span class="bs-board-name" onclick="switchBoard('${b.id}')">${escHtml(b.name)}</span>
+      <div class="bs-board-actions">
+        <button class="bs-action-btn" onclick="promptRenameBoard('${b.id}')" title="Rename">✎</button>
+        <button class="bs-action-btn bs-delete" onclick="deleteBoard('${b.id}')" title="Delete">✕</button>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="bs-divider"></div>
+    <button class="bs-new-btn" onclick="promptNewBoard()">+ New board</button>
+    <button class="bs-folder-btn" onclick="pickFolder()">⌂ Change folder</button>
+  `;
+}
+
+async function promptNewBoard() {
+  const name = prompt('Board name:');
+  if (!name || !name.trim()) return;
+  closeBoardSwitcher();
+  const id = await createBoard(name.trim());
+  await switchBoard(id);
+  showToast(`Board "${name.trim()}" created`);
+}
+
+function promptRenameBoard(id) {
+  const board = boards.find(b => b.id === id);
+  if (!board) return;
+  const name = prompt('New name:', board.name);
+  if (!name || !name.trim()) return;
+  renameBoard(id, name.trim());
+}
+
+// ─── APP INIT ────────────────────────────────────────────────────────────────
+async function initBoards() {
+  boards = await readJsonFile('boards.json') || [];
+
+  if (boards.length === 0) {
+    // First run — migrate any existing localStorage data
+    const id = genId();
+    let legacy = null;
+    try { const s = localStorage.getItem('homeKanban'); if (s) legacy = JSON.parse(s); } catch(e) {}
+    boards.push({ id, name: 'My Board', created: Date.now() });
+    await writeJsonFile(`board_${id}.json`, legacy || { cards: [], archive: [] });
+    await saveBoardIndex();
+    if (legacy) showToast('Existing board migrated to new storage');
+  }
+
+  const lastId = localStorage.getItem('homeKanban_lastBoard');
+  const startId = (lastId && boards.find(b => b.id === lastId)) ? lastId : boards[0].id;
+  activeBoardId = startId;
+  state = await readJsonFile(`board_${activeBoardId}.json`) || { cards: [], archive: [] };
+  document.getElementById('activeBoardName').textContent =
+    boards.find(b => b.id === startId)?.name || 'Board';
+  buildBoard();
+}
+
+async function init() {
+  if (!isChrome()) {
+    document.getElementById('chromeSplash').style.display = 'flex';
+    return;
+  }
+  try {
+    const stored = await getStoredHandle();
+    if (stored) {
+      const perm = await stored.requestPermission({ mode: 'readwrite' });
+      if (perm === 'granted') { dirHandle = stored; await initBoards(); return; }
+    }
+  } catch(e) {}
+  document.getElementById('folderPickerOverlay').style.display = 'flex';
 }
 
 function genId() {
@@ -1105,6 +1448,18 @@ function buildBoard() {
     board.appendChild(el);
   });
   renderAllCards();
+
+  // "Archive all" button on Done column header
+  const doneHeader = document.querySelector('.col-done .col-header');
+  if (doneHeader && !doneHeader.querySelector('.btn-archive-done')) {
+    const btn = document.createElement('button');
+    btn.className = 'btn-sm btn-archive-done';
+    btn.textContent = 'Archive all';
+    btn.title = 'Archive all Done cards';
+    btn.style.cssText = 'font-size:10.5px;padding:3px 8px;margin-left:4px';
+    btn.onclick = clearDone;
+    doneHeader.appendChild(btn);
+  }
 }
 
 function renderAllCards() {
@@ -1128,8 +1483,12 @@ function buildCardEl(card) {
   el.id = `card-${card.id}`;
   el.setAttribute('draggable', 'true');
   el.setAttribute('data-id', card.id);
+  if (card.priority) el.setAttribute('data-priority', card.priority);
   el.ondragstart = (e) => onDragStart(e, card.id);
   el.ondragend = onDragEnd;
+  el.ondragover = (e) => onCardDragOver(e, card.id);
+  el.ondragleave = (e) => onCardDragLeave(e);
+  el.ondrop = (e) => onCardDrop(e, card.id);
 
   const label = LABELS.find(l => l.id === card.label);
   const colIdx = COLUMNS.findIndex(c => c.id === card.colId);
@@ -1138,6 +1497,13 @@ function buildCardEl(card) {
   let photoHtml = '';
   if (card.photos && card.photos.length > 0) {
     photoHtml = `<img class="card-thumb" src="${card.photos[0]}" alt="">`;
+  }
+
+  // Priority badge
+  const PRIORITY_META = { high: '⬆ High', medium: '→ Med', low: '⬇ Low' };
+  let priorityHtml = '';
+  if (card.priority && PRIORITY_META[card.priority]) {
+    priorityHtml = `<div class="priority-badge priority-${card.priority}">${PRIORITY_META[card.priority]}</div>`;
   }
 
   // Label
@@ -1209,7 +1575,7 @@ function buildCardEl(card) {
   el.innerHTML = `
     <button class="card-delete-btn" onclick="deleteCard('${card.id}', event)" title="Delete">✕</button>
     ${photoHtml}
-    ${labelHtml}
+    ${priorityHtml}${labelHtml}
     <div class="card-title">${escHtml(card.title || 'Untitled')}</div>
     <div class="card-meta">${dueHtml}${linksHtml}${photoCountHtml}</div>
     ${deadlineHtml ? `<div style="margin-top:5px;padding:5px 8px;border-radius:6px;background:${deadlineUrgent ? 'rgba(192,85,85,0.1)' : 'rgba(201,125,78,0.08)'};">${deadlineHtml}</div>` : ''}
@@ -1284,7 +1650,9 @@ function addCard(colId) {
     title: title.trim(),
     label: '',
     notes: '',
+    priority: '',
     dueDate: '',
+    deadline: '',
     checklist: [],
     photos: [],
     urls: [],
@@ -1331,6 +1699,9 @@ function onDragStart(e, id) {
 function onDragEnd() {
   document.querySelectorAll('.card.dragging').forEach(el => el.classList.remove('dragging'));
   document.querySelectorAll('.column.drag-over').forEach(el => el.classList.remove('drag-over'));
+  document.querySelectorAll('.card.drop-above, .card.drop-below').forEach(el => {
+    el.classList.remove('drop-above', 'drop-below');
+  });
 }
 
 function onDragOver(e) {
@@ -1353,6 +1724,54 @@ function onDrop(e, colId) {
   const card = state.cards.find(c => c.id === dragSrcId);
   if (card && card.colId !== colId) {
     card.colId = colId;
+    saveState();
+    renderAllCards();
+  }
+  dragSrcId = null;
+}
+
+// Card-level drag handlers for within-column reordering
+function onCardDragOver(e, targetId) {
+  if (!dragSrcId || dragSrcId === targetId) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const el = document.getElementById(`card-${targetId}`);
+  if (!el) return;
+  const above = e.clientY < el.getBoundingClientRect().top + el.offsetHeight / 2;
+  el.classList.toggle('drop-above', above);
+  el.classList.toggle('drop-below', !above);
+  const col = el.closest('.column');
+  if (col) col.classList.add('drag-over');
+}
+
+function onCardDragLeave(e) {
+  const el = e.currentTarget;
+  if (!el.contains(e.relatedTarget)) {
+    el.classList.remove('drop-above', 'drop-below');
+  }
+}
+
+function onCardDrop(e, targetId) {
+  e.preventDefault();
+  e.stopPropagation();
+  const targetEl = document.getElementById(`card-${targetId}`);
+  if (targetEl) {
+    const above = e.clientY < targetEl.getBoundingClientRect().top + targetEl.offsetHeight / 2;
+    targetEl.classList.remove('drop-above', 'drop-below');
+    document.querySelectorAll('.column.drag-over').forEach(c => c.classList.remove('drag-over'));
+
+    if (!dragSrcId || dragSrcId === targetId) { dragSrcId = null; return; }
+
+    const srcCard = state.cards.find(c => c.id === dragSrcId);
+    const tgtCard = state.cards.find(c => c.id === targetId);
+    if (!srcCard || !tgtCard) { dragSrcId = null; return; }
+
+    srcCard.colId = tgtCard.colId;
+    const srcIdx = state.cards.findIndex(c => c.id === dragSrcId);
+    state.cards.splice(srcIdx, 1);
+    const tgtIdx = state.cards.findIndex(c => c.id === targetId);
+    state.cards.splice(above ? tgtIdx : tgtIdx + 1, 0, srcCard);
+
     saveState();
     renderAllCards();
   }
@@ -1382,6 +1801,9 @@ function openCard(id) {
 
   // Status buttons
   renderModalStatus(card);
+
+  // Priority
+  renderPriorityModal(card);
 
   // Label select
   renderLabelSelect(card);
@@ -1434,6 +1856,28 @@ function setCardLabel(cardId, labelId) {
   card.label = card.label === labelId ? '' : labelId;
   saveState();
   renderLabelSelect(card);
+  renderAllCards();
+}
+
+function renderPriorityModal(card) {
+  const row = document.getElementById('modalPriorityRow');
+  const opts = [
+    { id: 'high',   label: '⬆ High',   cls: 'pb-high' },
+    { id: 'medium', label: '→ Medium', cls: 'pb-medium' },
+    { id: 'low',    label: '⬇ Low',    cls: 'pb-low' },
+  ];
+  row.innerHTML = opts.map(o =>
+    `<button class="priority-btn ${o.cls} ${card.priority === o.id ? 'active-priority' : ''}"
+      onclick="setCardPriority('${card.id}', '${o.id}')">${o.label}</button>`
+  ).join('');
+}
+
+function setCardPriority(cardId, priority) {
+  const card = state.cards.find(c => c.id === cardId);
+  if (!card) return;
+  card.priority = card.priority === priority ? '' : priority;
+  saveState();
+  renderPriorityModal(card);
   renderAllCards();
 }
 
@@ -1546,13 +1990,28 @@ function handlePhotoDrop(event) {
 function readPhotoFile(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
-    const card = state.cards.find(c => c.id === openCardId);
-    if (!card) return;
-    if (!card.photos) card.photos = [];
-    card.photos.push(e.target.result);
-    saveState();
-    renderPhotosModal(card);
-    renderAllCards();
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 900;
+      let { width, height } = img;
+      if (width > MAX || height > MAX) {
+        if (width >= height) { height = Math.round(height * MAX / width); width = MAX; }
+        else { width = Math.round(width * MAX / height); height = MAX; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const compressed = canvas.toDataURL('image/jpeg', 0.82);
+
+      const card = state.cards.find(c => c.id === openCardId);
+      if (!card) return;
+      if (!card.photos) card.photos = [];
+      card.photos.push(compressed);
+      saveState();
+      renderPhotosModal(card);
+      renderAllCards();
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -1574,7 +2033,7 @@ function renderUrlsModal(card) {
   list.innerHTML = card.urls.map((u, idx) => `
     <div class="url-item">
       ${u.label ? `<span class="url-item-label">${escHtml(u.label)}</span>` : ''}
-      <a href="${u.url}" target="_blank" rel="noopener">${escHtml(u.url)}</a>
+      <a href="${/^https?:\/\//i.test(u.url) ? escHtml(u.url) : '#'}" target="_blank" rel="noopener">${escHtml(u.url)}</a>
       <button class="url-delete" onclick="deleteUrl(${idx})">✕</button>
     </div>
   `).join('');
@@ -1656,11 +2115,13 @@ function closeArchive() {
 // ─── IMPORT / EXPORT ─────────────────────────────────────────────────────────
 
 function exportData() {
+  const boardName = boards.find(b => b.id === activeBoardId)?.name || 'board';
+  const slug = boardName.toLowerCase().replace(/\s+/g, '-');
   const json = JSON.stringify(state, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `home-board-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `${slug}-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
   showToast('Board exported!');
 }
@@ -1707,24 +2168,14 @@ function showToast(msg) {
 
 // ─── KEYBOARD SHORTCUTS ──────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeArchive(); }
+  if (e.key === 'Escape') { closeModal(); closeArchive(); closeBoardSwitcher(); }
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.board-switcher-wrap')) closeBoardSwitcher();
 });
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
-loadState();
-buildBoard();
-
-// Add Clear Done button dynamically near done column
-const doneHeader = document.querySelector('.col-done .col-header');
-if (doneHeader) {
-  const btn = document.createElement('button');
-  btn.className = 'btn-sm';
-  btn.textContent = 'Archive all';
-  btn.title = 'Archive all Done cards';
-  btn.style.cssText = 'font-size:10.5px;padding:3px 8px;margin-left:4px';
-  btn.onclick = clearDone;
-  doneHeader.appendChild(btn);
-}
+init();
 // ─── OCEAN BACKGROUND ────────────────────────────────────────────────────────
 (function() {
   const canvas = document.getElementById('seaCanvas');
@@ -1893,6 +2344,8 @@ if (doneHeader) {
     });
   }
 
+  let animId = null;
+
   function frame(ts) {
     t = ts * 0.001;
     ctx.clearRect(0, 0, W, H);
@@ -1906,10 +2359,19 @@ if (doneHeader) {
     layers.forEach(layer => drawWave(layer, t));
     drawParticles(t);
 
-    requestAnimationFrame(frame);
+    animId = requestAnimationFrame(frame);
   }
 
-  requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(animId);
+      animId = null;
+    } else if (!animId) {
+      animId = requestAnimationFrame(frame);
+    }
+  });
+
+  animId = requestAnimationFrame(frame);
 })();
 </script>
 </body>
