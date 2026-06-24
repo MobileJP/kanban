@@ -34,6 +34,70 @@
     --radius-lg: 16px;
   }
 
+  /* DARK MODE */
+  body.dark {
+    --bg: #111d2b;
+    --board-bg: #0d1825;
+    --col-bg: rgba(18, 32, 48, 0.88);
+    --col-border: rgba(50, 80, 110, 0.55);
+    --card-bg: rgba(22, 38, 56, 0.97);
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    --card-hover: 0 4px 20px rgba(0,0,0,0.5);
+    --text: #d8e8f0;
+    --text-muted: #7a9aaa;
+    --text-light: #4a6a7a;
+    --accent-light: rgba(42,127,173,0.2);
+    --green-light: rgba(58,138,106,0.2);
+    --red-light: rgba(192,85,85,0.2);
+    --blue-light: rgba(42,111,168,0.2);
+    --yellow-light: rgba(201,168,76,0.15);
+    --purple-light: rgba(106,95,168,0.2);
+  }
+  body.dark::before { background: rgba(0,10,20,0.3); }
+  body.dark .col-header { border-bottom-color: rgba(50,80,110,0.4); }
+  body.dark .modal-overlay { background: rgba(0,10,20,0.7); }
+  body.dark .modal { background: #14253a; border-color: rgba(50,80,110,0.5); }
+  body.dark .modal input,
+  body.dark .modal textarea,
+  body.dark .modal select { background: #0d1825; border-color: rgba(50,80,110,0.6); color: var(--text); }
+  body.dark .filter-pill { background: rgba(18,32,48,0.9); border-color: rgba(50,80,110,0.5); color: var(--text-muted); }
+  body.dark .filter-pill.active { background: var(--accent-light); }
+  body.dark .priority-filter-pill { background: rgba(18,32,48,0.9); border-color: rgba(50,80,110,0.5); }
+  body.dark .archive-item { border-color: rgba(50,80,110,0.4); }
+  body.dark .archive-panel { background: #14253a; }
+  body.dark .bs-dropdown { background: #14253a; border-color: rgba(50,80,110,0.5); }
+  body.dark .composer-textarea { background: #0d1825; color: var(--text); }
+  body.dark .photo-drop-zone { background: rgba(18,32,48,0.6); border-color: rgba(50,80,110,0.5); }
+  body.dark .checklist-item input[type=checkbox] { accent-color: var(--accent); }
+  body.dark .card-label { opacity: 0.9; }
+  body.dark .empty-col { color: var(--text-light); }
+
+  /* COMPACT VIEW */
+  body.compact .card {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0 10px;
+    padding: 7px 10px;
+    min-height: unset;
+  }
+  body.compact .card-thumb,
+  body.compact .card-meta,
+  body.compact .checklist-preview,
+  body.compact .card-deadline-block { display: none !important; }
+  body.compact .priority-badge { font-size: 10px; padding: 1px 6px; white-space: nowrap; }
+  body.compact .card-label { margin-bottom: 0; font-size: 10px; padding: 1px 6px; }
+  body.compact .card-title { font-size: 12.5px; margin-bottom: 0; grid-column: 2; grid-row: 1; }
+  body.compact .card-nav {
+    grid-column: 4; grid-row: 1;
+    border-top: none; margin-top: 0; padding-top: 0;
+    display: flex; align-items: center; gap: 4px;
+  }
+  body.compact .card-delete-btn { position: static; opacity: 1; grid-column: 3; grid-row: 1; margin-top: 0; }
+  body.compact .priority-badge + .card-label,
+  body.compact .card-label { grid-column: 1; grid-row: 1; }
+  body.compact .priority-badge { grid-column: 1; grid-row: 1; }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -158,6 +222,65 @@
   .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
   .btn-sm.primary { background: var(--accent); border-color: var(--accent); color: white; }
   .btn-sm.primary:hover { background: #b86e3f; }
+  .btn-icon { padding: 6px 9px; font-size: 14px; line-height: 1; }
+  .btn-icon.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  body.dark .btn-sm { background: rgba(18,32,48,0.9); border-color: rgba(50,80,110,0.5); color: var(--text-muted); }
+  body.dark .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+  body.dark .btn-icon.active { background: var(--accent-light); }
+
+  /* SAVE STATUS */
+  .save-status {
+    font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 10px;
+    opacity: 0; transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .save-status.saving { opacity: 1; color: rgba(255,255,255,0.55); }
+  .save-status.saved  { opacity: 1; color: rgba(120,220,160,0.9); }
+  .save-status.error  { opacity: 1; color: rgba(255,140,140,0.9); }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex; align-items: center; gap: 0;
+    padding: 0 20px;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+    font-size: 12px; color: var(--text-muted);
+    overflow-x: auto; flex-shrink: 0;
+    height: 34px;
+  }
+  .stats-bar::-webkit-scrollbar { display: none; }
+  .stats-col {
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 14px; height: 100%;
+    border-right: 1px solid rgba(0,0,0,0.07);
+    white-space: nowrap;
+  }
+  .stats-col:first-child { padding-left: 0; }
+  .stats-col-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+  .stats-col-name { color: var(--text-muted); }
+  .stats-col-count { font-weight: 700; font-size: 13px; color: var(--text); }
+  .stats-summary {
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 14px; margin-left: auto;
+    white-space: nowrap;
+  }
+  .stats-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11.5px; font-weight: 600;
+  }
+  .stats-tag.overdue  { color: #a03535; }
+  .stats-tag.highpri  { color: #b04040; }
+  .stats-tag.total    { color: var(--text-muted); }
+  body.dark .stats-bar {
+    background: rgba(14,24,38,0.7);
+    border-bottom-color: rgba(50,80,110,0.3);
+  }
+  body.dark .stats-col { border-right-color: rgba(50,80,110,0.25); }
+  body.dark .stats-col-count { color: var(--text); }
 
   /* BOARD */
   .board {
@@ -280,6 +403,7 @@
   .card:hover { box-shadow: var(--card-hover); border-color: var(--col-border); }
   .card.dragging { opacity: 0.4; transform: rotate(1.5deg); }
   .card.hidden { display: none; }
+  .card { cursor: pointer; }
 
   .card-label {
     display: inline-flex;
@@ -881,6 +1005,57 @@
     font-style: italic;
   }
 
+  /* INLINE COMPOSER */
+  .col-composer { display: none; padding: 0 10px 10px; }
+  .col-composer.open { display: block; }
+  .composer-textarea {
+    width: 100%; border: 1.5px solid var(--accent); border-radius: 9px;
+    padding: 9px 11px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--text); resize: none; outline: none;
+    box-shadow: 0 2px 8px rgba(42,127,173,0.12); background: white;
+  }
+  .composer-btns { display: flex; gap: 7px; margin-top: 7px; }
+  .composer-submit {
+    padding: 7px 15px; background: var(--accent); color: white;
+    border: none; border-radius: 8px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600;
+    transition: opacity 0.15s;
+  }
+  .composer-submit:hover { opacity: 0.85; }
+  .composer-cancel {
+    padding: 7px 12px; background: none; color: var(--text-muted);
+    border: none; border-radius: 8px; cursor: pointer; font-size: 15px;
+  }
+  .composer-cancel:hover { color: var(--red); }
+
+  /* ALERT BADGES */
+  .alert-badges { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .alert-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 18px;
+  }
+  .alert-overdue { color: #a03535; background: rgba(192,85,85,0.13); }
+  .alert-soon    { color: #a06020; background: rgba(201,140,60,0.15); }
+
+  /* PRIORITY FILTER PILLS */
+  .priority-filter-pill {
+    display: inline-flex; align-items: center; padding: 5px 11px;
+    border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid #cddbe5; background: white; color: var(--text-muted);
+    white-space: nowrap; transition: all 0.15s;
+  }
+  .priority-filter-pill:hover { border-color: currentColor; }
+
+  /* TOAST ACTION BUTTON */
+  .toast { display: flex; align-items: center; gap: 14px; }
+  #toastAction {
+    background: rgba(255,255,255,0.16); color: white; border: none;
+    padding: 5px 13px; border-radius: 7px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600;
+    white-space: nowrap;
+  }
+  #toastAction:hover { background: rgba(255,255,255,0.3); }
+
   /* PRIORITY BADGE */
   .priority-badge {
     display: inline-flex; align-items: center; gap: 3px;
@@ -1014,6 +1189,7 @@
     </button>
     <div class="board-switcher-dropdown" id="boardSwitcherDropdown"></div>
   </div>
+  <span class="save-status" id="saveStatus"></span>
 
   <div class="header-search">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -1023,17 +1199,25 @@
   </div>
 
   <div class="header-filters">
-    <button class="filter-pill active" data-label="all" onclick="setLabelFilter('all', this)">All</button>
-    <button class="filter-pill" data-label="feature" onclick="setLabelFilter('feature', this)">🚀 Feature</button>
-    <button class="filter-pill" data-label="discovery" onclick="setLabelFilter('discovery', this)">🔍 Discovery</button>
-    <button class="filter-pill" data-label="stakeholder" onclick="setLabelFilter('stakeholder', this)">👥 Stakeholder</button>
-    <button class="filter-pill" data-label="planning" onclick="setLabelFilter('planning', this)">🗺️ Planning</button>
-    <button class="filter-pill" data-label="release" onclick="setLabelFilter('release', this)">🚢 Release</button>
-    <button class="filter-pill" data-label="bug" onclick="setLabelFilter('bug', this)">🐛 Bug</button>
-    <button class="filter-pill" data-label="admin" onclick="setLabelFilter('admin', this)">📋 Admin</button>
+    <button class="filter-pill active" data-label="all" onclick="setLabelFilter('all')">All</button>
+    <button class="filter-pill" data-label="feature" onclick="setLabelFilter('feature')">🚀 Feature</button>
+    <button class="filter-pill" data-label="discovery" onclick="setLabelFilter('discovery')">🔍 Discovery</button>
+    <button class="filter-pill" data-label="stakeholder" onclick="setLabelFilter('stakeholder')">👥 Stakeholder</button>
+    <button class="filter-pill" data-label="planning" onclick="setLabelFilter('planning')">🗺️ Planning</button>
+    <button class="filter-pill" data-label="release" onclick="setLabelFilter('release')">🚢 Release</button>
+    <button class="filter-pill" data-label="bug" onclick="setLabelFilter('bug')">🐛 Bug</button>
+    <button class="filter-pill" data-label="admin" onclick="setLabelFilter('admin')">📋 Admin</button>
+    <div style="width:1px;height:16px;background:rgba(0,0,0,0.12);margin:0 4px;flex-shrink:0"></div>
+    <button class="priority-filter-pill" data-priority="high"   onclick="setPriorityFilter('high')"   style="color:#b04040">⬆ High</button>
+    <button class="priority-filter-pill" data-priority="medium" onclick="setPriorityFilter('medium')" style="color:#a06020">→ Med</button>
+    <button class="priority-filter-pill" data-priority="low"    onclick="setPriorityFilter('low')"    style="color:var(--blue)">⬇ Low</button>
   </div>
 
+  <div id="alertBadges" class="alert-badges"></div>
+
   <div class="header-actions">
+    <button class="btn-sm btn-icon" id="darkModeBtn"    onclick="toggleDarkMode()"    title="Toggle dark mode">🌙</button>
+    <button class="btn-sm btn-icon" id="compactViewBtn" onclick="toggleCompactView()" title="Toggle compact view">☰</button>
     <button class="btn-sm" onclick="showArchive()">🗃 Archive</button>
     <button class="btn-sm" onclick="exportData()">⬇ Export</button>
     <label class="btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
@@ -1059,6 +1243,9 @@
     <button class="btn-primary" onclick="pickFolder()">Choose folder…</button>
   </div>
 </div>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar"></div>
 
 <!-- BOARD -->
 <div class="board" id="board">
@@ -1186,7 +1373,10 @@
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">
+  <span id="toastMsg"></span>
+  <button id="toastAction" style="display:none" onclick="handleToastAction()"></button>
+</div>
 
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
@@ -1209,10 +1399,18 @@ const LABELS = [
 ];
 
 let state = { cards: [], archive: [] };
-let currentLabelFilter = 'all';
+let imgCache = {};                // filename → object URL for current board's images
+let currentLabelFilters = [];     // array of selected label ids; empty = All
+let currentPriorityFilter = '';
 let currentSearchFilter = '';
 let openCardId = null;
+let composingCol = null;
 let dragSrcId = null;
+let _didDrag = false;
+let _undoCard = null;
+let _toastAction = null;
+let _toastTimer = null;
+let _saveDebounce = null;
 let dirHandle = null;
 let boards = [];
 let activeBoardId = null;
@@ -1259,12 +1457,81 @@ async function writeJsonFile(name, data) {
   await w.close();
 }
 
+function boardSlug(name) {
+  return (name || 'board').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'board';
+}
+
+async function readBoardFile(folder, boardId) {
+  try {
+    const sub = await dirHandle.getDirectoryHandle(folder);
+    const fh  = await sub.getFileHandle(`board_${boardId}.json`);
+    return JSON.parse(await (await fh.getFile()).text());
+  } catch(e) { return null; }
+}
+
+async function writeBoardFile(folder, boardId, data) {
+  const sub = await dirHandle.getDirectoryHandle(folder, { create: true });
+  const fh  = await sub.getFileHandle(`board_${boardId}.json`, { create: true });
+  const w   = await fh.createWritable();
+  await w.write(JSON.stringify(data, null, 2));
+  await w.close();
+}
+
+// ─── IMAGE FILE HELPERS ───────────────────────────────────────────────────────
+async function getImagesDir(create = false) {
+  const boardDef = boards.find(b => b.id === activeBoardId);
+  if (!boardDef) return null;
+  const sub = await dirHandle.getDirectoryHandle(boardDef.folder, { create });
+  return sub.getDirectoryHandle('images', { create });
+}
+
+function getPhotoSrc(photo) {
+  if (!photo) return '';
+  if (photo.startsWith('data:')) return photo;   // legacy base64 — show as-is
+  return imgCache[photo] || '';
+}
+
+async function preloadImages() {
+  Object.values(imgCache).forEach(url => URL.revokeObjectURL(url));
+  imgCache = {};
+  try {
+    const imagesDir = await getImagesDir(false);
+    if (!imagesDir) return;
+    const filenames = new Set(state.cards.flatMap(c => (c.photos || []).filter(p => !p.startsWith('data:'))));
+    for (const name of filenames) {
+      try {
+        const fh   = await imagesDir.getFileHandle(name);
+        const file = await fh.getFile();
+        imgCache[name] = URL.createObjectURL(file);
+      } catch(e) {}
+    }
+  } catch(e) {}
+}
+
 // ─── SAVE / LOAD (file-based) ─────────────────────────────────────────────────
+let _saveStatusTimer = null;
+
+function setSaveStatus(s) {
+  const el = document.getElementById('saveStatus');
+  if (!el) return;
+  clearTimeout(_saveStatusTimer);
+  el.className = `save-status ${s}`;
+  if (s === 'saving') { el.textContent = 'Saving…'; }
+  else if (s === 'saved') {
+    el.textContent = 'Saved ✓';
+    _saveStatusTimer = setTimeout(() => { el.style.opacity = '0'; el.className = 'save-status'; }, 2200);
+  } else if (s === 'error') { el.textContent = '⚠ Save failed'; }
+  el.style.opacity = '';
+}
+
 function saveState() {
   if (!dirHandle || !activeBoardId) return;
-  writeJsonFile(`board_${activeBoardId}.json`, state).catch(() => {
-    showToast('⚠ Could not save — check folder access');
-  });
+  const board = boards.find(b => b.id === activeBoardId);
+  if (!board) return;
+  setSaveStatus('saving');
+  writeBoardFile(board.folder, activeBoardId, state)
+    .then(() => setSaveStatus('saved'))
+    .catch(() => { setSaveStatus('error'); showToast('⚠ Could not save — check folder access'); });
 }
 
 // ─── BOARD INDEX ──────────────────────────────────────────────────────────────
@@ -1287,23 +1554,29 @@ async function pickFolder() {
 async function switchBoard(id) {
   activeBoardId = id;
   localStorage.setItem('homeKanban_lastBoard', id);
-  state = await readJsonFile(`board_${activeBoardId}.json`) || { cards: [], archive: [] };
+  const board = boards.find(b => b.id === id);
+  state = await readBoardFile(board.folder, id) || { cards: [], archive: [] };
+  await preloadImages();
   document.getElementById('activeBoardName').textContent =
     boards.find(b => b.id === id)?.name || 'Board';
   closeBoardSwitcher();
-  currentLabelFilter = 'all';
+  closeComposer();
+  currentLabelFilters = [];
+  currentPriorityFilter = '';
   currentSearchFilter = '';
   document.getElementById('searchInput').value = '';
   document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
   document.querySelector('.filter-pill[data-label="all"]').classList.add('active');
-  renderAllCards();
+  document.querySelectorAll('.priority-filter-pill').forEach(p => p.classList.remove('active'));
+  buildBoard();
 }
 
 async function createBoard(name) {
   const id = genId();
-  boards.push({ id, name, created: Date.now() });
+  const folder = boardSlug(name);
+  boards.push({ id, name, folder, created: Date.now() });
   await saveBoardIndex();
-  await writeJsonFile(`board_${id}.json`, { cards: [], archive: [] });
+  await writeBoardFile(folder, id, { cards: [], archive: [] });
   return id;
 }
 
@@ -1319,11 +1592,15 @@ async function renameBoard(id, newName) {
 
 async function deleteBoard(id) {
   if (boards.length <= 1) { showToast('Cannot delete the last board'); return; }
-  const name = boards.find(b => b.id === id)?.name;
-  if (!confirm(`Delete board "${name}"? This cannot be undone.`)) return;
+  const board = boards.find(b => b.id === id);
+  if (!confirm(`Delete board "${board?.name}"? This cannot be undone.`)) return;
   boards = boards.filter(b => b.id !== id);
   await saveBoardIndex();
-  try { await dirHandle.removeEntry(`board_${id}.json`); } catch(e) {}
+  // Remove the board's subfolder (best-effort — only works if no other board shares the same folder name)
+  const siblingUsesFolder = boards.some(b => b.folder === board?.folder);
+  if (board?.folder && !siblingUsesFolder) {
+    try { await dirHandle.removeEntry(board.folder, { recursive: true }); } catch(e) {}
+  }
   if (id === activeBoardId) await switchBoard(boards[0].id);
   else renderBoardSwitcherDropdown();
 }
@@ -1383,18 +1660,32 @@ async function initBoards() {
     const id = genId();
     let legacy = null;
     try { const s = localStorage.getItem('homeKanban'); if (s) legacy = JSON.parse(s); } catch(e) {}
-    boards.push({ id, name: 'My Board', created: Date.now() });
-    await writeJsonFile(`board_${id}.json`, legacy || { cards: [], archive: [] });
+    const folder = boardSlug('My Board');
+    boards.push({ id, name: 'My Board', folder, created: Date.now() });
+    await writeBoardFile(folder, id, legacy || { cards: [], archive: [] });
     await saveBoardIndex();
     if (legacy) showToast('Existing board migrated to new storage');
   }
 
+  // Migrate boards that pre-date per-board subfolders (no folder property)
+  let migrated = false;
+  for (const board of boards) {
+    if (!board.folder) {
+      board.folder = boardSlug(board.name);
+      const data = await readJsonFile(`board_${board.id}.json`);
+      if (data) await writeBoardFile(board.folder, board.id, data);
+      migrated = true;
+    }
+  }
+  if (migrated) await saveBoardIndex();
+
   const lastId = localStorage.getItem('homeKanban_lastBoard');
   const startId = (lastId && boards.find(b => b.id === lastId)) ? lastId : boards[0].id;
   activeBoardId = startId;
-  state = await readJsonFile(`board_${activeBoardId}.json`) || { cards: [], archive: [] };
-  document.getElementById('activeBoardName').textContent =
-    boards.find(b => b.id === startId)?.name || 'Board';
+  const startBoard = boards.find(b => b.id === startId);
+  state = await readBoardFile(startBoard.folder, startId) || { cards: [], archive: [] };
+  document.getElementById('activeBoardName').textContent = startBoard?.name || 'Board';
+  await preloadImages();
   buildBoard();
 }
 
@@ -1440,7 +1731,15 @@ function buildBoard() {
            ondragleave="onDragLeave(event)"
            ondrop="onDrop(event, '${col.id}')">
       </div>
-      <button class="add-card-btn" onclick="addCard('${col.id}')">
+      <div class="col-composer" id="composer-${col.id}">
+        <textarea class="composer-textarea" id="composer-text-${col.id}" placeholder="Card title…" rows="2"
+          onkeydown="onComposerKey(event, '${col.id}')"></textarea>
+        <div class="composer-btns">
+          <button class="composer-submit" onclick="submitComposer('${col.id}')">Add card</button>
+          <button class="composer-cancel" onclick="closeComposer()">✕</button>
+        </div>
+      </div>
+      <button class="add-card-btn" id="addbtn-${col.id}" onclick="openComposer('${col.id}')">
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Add card
       </button>
@@ -1475,6 +1774,8 @@ function renderAllCards() {
     }
   });
   applyFilters();
+  updateAlertBadges();
+  updateStatsBar();
 }
 
 function buildCardEl(card) {
@@ -1489,6 +1790,11 @@ function buildCardEl(card) {
   el.ondragover = (e) => onCardDragOver(e, card.id);
   el.ondragleave = (e) => onCardDragLeave(e);
   el.ondrop = (e) => onCardDrop(e, card.id);
+  el.onclick = (e) => {
+    if (_didDrag) return;
+    if (e.target.closest('.card-delete-btn') || e.target.closest('.card-nav')) return;
+    openCard(card.id);
+  };
 
   const label = LABELS.find(l => l.id === card.label);
   const colIdx = COLUMNS.findIndex(c => c.id === card.colId);
@@ -1496,7 +1802,7 @@ function buildCardEl(card) {
   // Cover photo
   let photoHtml = '';
   if (card.photos && card.photos.length > 0) {
-    photoHtml = `<img class="card-thumb" src="${card.photos[0]}" alt="">`;
+    photoHtml = `<img class="card-thumb" src="${getPhotoSrc(card.photos[0])}" alt="">`;
   }
 
   // Priority badge
@@ -1601,12 +1907,13 @@ function buildCardEl(card) {
 // ─── FILTERS ─────────────────────────────────────────────────────────────────
 
 function cardMatchesFilter(card) {
-  const matchesLabel = currentLabelFilter === 'all' || card.label === currentLabelFilter;
+  const matchesLabel = currentLabelFilters.length === 0 || currentLabelFilters.includes(card.label);
+  const matchesPriority = !currentPriorityFilter || card.priority === currentPriorityFilter;
   const q = currentSearchFilter.toLowerCase();
   const matchesSearch = !q ||
     (card.title || '').toLowerCase().includes(q) ||
     (card.notes || '').toLowerCase().includes(q);
-  return matchesLabel && matchesSearch;
+  return matchesLabel && matchesPriority && matchesSearch;
 }
 
 function applyFilters() {
@@ -1627,10 +1934,26 @@ function applyFilters() {
   });
 }
 
-function setLabelFilter(label, btn) {
-  currentLabelFilter = label;
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
+function setLabelFilter(labelId) {
+  if (labelId === 'all') {
+    currentLabelFilters = [];
+  } else if (currentLabelFilters.includes(labelId)) {
+    currentLabelFilters = currentLabelFilters.filter(l => l !== labelId);
+  } else {
+    currentLabelFilters = [...currentLabelFilters, labelId];
+  }
+  document.querySelectorAll('.filter-pill[data-label]').forEach(p => {
+    const id = p.getAttribute('data-label');
+    p.classList.toggle('active', id === 'all' ? currentLabelFilters.length === 0 : currentLabelFilters.includes(id));
+  });
+  applyFilters();
+}
+
+function setPriorityFilter(priority) {
+  currentPriorityFilter = currentPriorityFilter === priority ? '' : priority;
+  document.querySelectorAll('.priority-filter-pill').forEach(p => {
+    p.classList.toggle('active', p.getAttribute('data-priority') === currentPriorityFilter);
+  });
   applyFilters();
 }
 
@@ -1641,21 +1964,37 @@ function filterCards() {
 
 // ─── CARD CRUD ───────────────────────────────────────────────────────────────
 
-function addCard(colId) {
-  const title = prompt('Card title:');
-  if (!title || !title.trim()) return;
+function openComposer(colId) {
+  if (composingCol) closeComposer();
+  composingCol = colId;
+  const composer = document.getElementById(`composer-${colId}`);
+  const addBtn = document.getElementById(`addbtn-${colId}`);
+  if (!composer) return;
+  composer.classList.add('open');
+  if (addBtn) addBtn.style.display = 'none';
+  const ta = document.getElementById(`composer-text-${colId}`);
+  if (ta) { ta.value = ''; setTimeout(() => ta.focus(), 0); }
+}
+
+function closeComposer() {
+  if (!composingCol) return;
+  const composer = document.getElementById(`composer-${composingCol}`);
+  const addBtn = document.getElementById(`addbtn-${composingCol}`);
+  if (composer) composer.classList.remove('open');
+  if (addBtn) addBtn.style.display = '';
+  composingCol = null;
+}
+
+function submitComposer(colId) {
+  const ta = document.getElementById(`composer-text-${colId}`);
+  const title = (ta ? ta.value : '').trim();
+  closeComposer();
+  if (!title) return;
   const card = {
-    id: genId(),
-    colId,
-    title: title.trim(),
-    label: '',
-    notes: '',
-    priority: '',
-    dueDate: '',
-    deadline: '',
-    checklist: [],
-    photos: [],
-    urls: [],
+    id: genId(), colId, title,
+    label: '', notes: '', priority: '',
+    dueDate: '', deadline: '',
+    checklist: [], photos: [], urls: [],
     createdAt: Date.now(),
   };
   state.cards.push(card);
@@ -1664,13 +2003,29 @@ function addCard(colId) {
   openCard(card.id);
 }
 
+function onComposerKey(event, colId) {
+  if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitComposer(colId); }
+  if (event.key === 'Escape') closeComposer();
+}
+
 function deleteCard(id, event) {
   event.stopPropagation();
-  if (!confirm('Delete this card?')) return;
-  state.cards = state.cards.filter(c => c.id !== id);
+  const idx = state.cards.findIndex(c => c.id === id);
+  if (idx < 0) return;
+  const [card] = state.cards.splice(idx, 1);
+  _undoCard = { card, idx };
+  if (openCardId === id) closeModal();
   saveState();
   renderAllCards();
-  showToast('Card deleted');
+  showToast('Card deleted', 'Undo', undoDelete);
+}
+
+function undoDelete() {
+  if (!_undoCard) return;
+  state.cards.splice(Math.min(_undoCard.idx, state.cards.length), 0, _undoCard.card);
+  _undoCard = null;
+  saveState();
+  renderAllCards();
 }
 
 function moveCard(id, dir, event) {
@@ -1688,6 +2043,7 @@ function moveCard(id, dir, event) {
 // ─── DRAG & DROP ─────────────────────────────────────────────────────────────
 
 function onDragStart(e, id) {
+  _didDrag = false;
   dragSrcId = id;
   e.dataTransfer.effectAllowed = 'move';
   setTimeout(() => {
@@ -1697,6 +2053,8 @@ function onDragStart(e, id) {
 }
 
 function onDragEnd() {
+  _didDrag = true;
+  setTimeout(() => { _didDrag = false; }, 50);
   document.querySelectorAll('.card.dragging').forEach(el => el.classList.remove('dragging'));
   document.querySelectorAll('.column.drag-over').forEach(el => el.classList.remove('drag-over'));
   document.querySelectorAll('.card.drop-above, .card.drop-below').forEach(el => {
@@ -1886,8 +2244,13 @@ function saveModalField(field, value) {
   const card = state.cards.find(c => c.id === openCardId);
   if (!card) return;
   card[field] = value;
-  saveState();
-  renderAllCards();
+  if (field === 'notes') {
+    clearTimeout(_saveDebounce);
+    _saveDebounce = setTimeout(saveState, 350);
+  } else {
+    saveState();
+    renderAllCards();
+  }
 }
 
 function closeModal() {
@@ -1968,7 +2331,7 @@ function renderPhotosModal(card) {
   if (!card.photos || card.photos.length === 0) { grid.innerHTML = ''; return; }
   grid.innerHTML = card.photos.map((src, idx) => `
     <div class="photo-thumb-wrap">
-      <img src="${src}" alt="">
+      <img src="${getPhotoSrc(src)}" alt="">
       <button class="photo-delete" onclick="deletePhoto(${idx})">✕</button>
     </div>
   `).join('');
@@ -2001,25 +2364,44 @@ function readPhotoFile(file) {
       const canvas = document.createElement('canvas');
       canvas.width = width; canvas.height = height;
       canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-      const compressed = canvas.toDataURL('image/jpeg', 0.82);
-
-      const card = state.cards.find(c => c.id === openCardId);
-      if (!card) return;
-      if (!card.photos) card.photos = [];
-      card.photos.push(compressed);
-      saveState();
-      renderPhotosModal(card);
-      renderAllCards();
+      canvas.toBlob(async (blob) => {
+        const imgId = `img_${genId()}.jpg`;
+        imgCache[imgId] = URL.createObjectURL(blob);
+        try {
+          const imagesDir = await getImagesDir(true);
+          const fh = await imagesDir.getFileHandle(imgId, { create: true });
+          const w  = await fh.createWritable();
+          await w.write(blob);
+          await w.close();
+        } catch(e) {
+          showToast('⚠ Could not save image file');
+          return;
+        }
+        const card = state.cards.find(c => c.id === openCardId);
+        if (!card) return;
+        if (!card.photos) card.photos = [];
+        card.photos.push(imgId);
+        saveState();
+        renderPhotosModal(card);
+        renderAllCards();
+      }, 'image/jpeg', 0.82);
     };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-function deletePhoto(idx) {
+async function deletePhoto(idx) {
   const card = state.cards.find(c => c.id === openCardId);
   if (!card) return;
-  card.photos.splice(idx, 1);
+  const [photo] = card.photos.splice(idx, 1);
+  if (photo && !photo.startsWith('data:')) {
+    if (imgCache[photo]) { URL.revokeObjectURL(imgCache[photo]); delete imgCache[photo]; }
+    try {
+      const imagesDir = await getImagesDir(false);
+      if (imagesDir) await imagesDir.removeEntry(photo);
+    } catch(e) {}
+  }
   saveState();
   renderPhotosModal(card);
   renderAllCards();
@@ -2159,22 +2541,132 @@ function autoResize(el) {
   el.style.height = el.scrollHeight + 'px';
 }
 
-function showToast(msg) {
+function showToast(msg, actionLabel, onAction) {
+  clearTimeout(_toastTimer);
+  document.getElementById('toastMsg').textContent = msg;
+  const btn = document.getElementById('toastAction');
+  if (actionLabel && onAction) {
+    _toastAction = onAction;
+    btn.textContent = actionLabel;
+    btn.style.display = '';
+  } else {
+    _toastAction = null;
+    btn.style.display = 'none';
+  }
   const t = document.getElementById('toast');
-  t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
+  _toastTimer = setTimeout(() => { t.classList.remove('show'); _toastAction = null; }, 4200);
+}
+
+function handleToastAction() {
+  if (_toastAction) _toastAction();
+  clearTimeout(_toastTimer);
+  document.getElementById('toast').classList.remove('show');
+  _toastAction = null;
+}
+
+// ─── STATS BAR ───────────────────────────────────────────────────────────────
+const COL_DOTS = {
+  consideration: '#a0bcca',
+  todo:          '#2a7fad',
+  active:        '#3a8a6a',
+  blocked:       '#c05555',
+  done:          '#9a9082',
+};
+
+function updateStatsBar() {
+  const el = document.getElementById('statsBar');
+  if (!el) return;
+
+  const now = new Date(); now.setHours(0,0,0,0);
+  const total    = state.cards.length;
+  const overdue  = state.cards.filter(c => c.colId !== 'done' && c.deadline &&
+                     new Date(c.deadline + 'T00:00:00') < now).length;
+  const highPri  = state.cards.filter(c => c.colId !== 'done' && c.priority === 'high').length;
+
+  const colHtml = COLUMNS.map(col => {
+    const count = state.cards.filter(c => c.colId === col.id).length;
+    const dot   = COL_DOTS[col.id] || '#aaa';
+    return `<div class="stats-col">
+      <span class="stats-col-dot" style="background:${dot}"></span>
+      <span class="stats-col-name">${col.title}</span>
+      <span class="stats-col-count">${count}</span>
+    </div>`;
+  }).join('');
+
+  const summaryParts = [`<span class="stats-tag total">Total ${total}</span>`];
+  if (overdue > 0) summaryParts.push(`<span class="stats-tag overdue">⚠ ${overdue} overdue</span>`);
+  if (highPri > 0) summaryParts.push(`<span class="stats-tag highpri">⬆ ${highPri} high</span>`);
+
+  el.innerHTML = colHtml + `<div class="stats-summary">${summaryParts.join('')}</div>`;
+}
+
+// ─── ALERT BADGES ────────────────────────────────────────────────────────────
+function updateAlertBadges() {
+  const el = document.getElementById('alertBadges');
+  if (!el) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const activeCards = state.cards.filter(c => c.colId !== 'done');
+  const overdue = activeCards.filter(c => {
+    if (!c.deadline) return false;
+    return new Date(c.deadline + 'T00:00:00') < now;
+  }).length;
+  const dueSoon = activeCards.filter(c => {
+    if (!c.deadline) return false;
+    const d = new Date(c.deadline + 'T00:00:00');
+    const days = Math.ceil((d - now) / 86400000);
+    return days >= 0 && days <= 3;
+  }).length;
+  el.innerHTML = [
+    overdue > 0 ? `<span class="alert-badge alert-overdue">⚠ ${overdue} overdue</span>` : '',
+    dueSoon > 0 ? `<span class="alert-badge alert-soon">⏳ ${dueSoon} due soon</span>` : '',
+  ].join('');
+}
+
+// ─── DARK MODE & COMPACT VIEW ────────────────────────────────────────────────
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('kanban_darkMode', isDark ? '1' : '');
+  document.getElementById('darkModeBtn').classList.toggle('active', isDark);
+  document.getElementById('darkModeBtn').textContent = isDark ? '☀️' : '🌙';
+}
+
+function toggleCompactView() {
+  const isCompact = document.body.classList.toggle('compact');
+  localStorage.setItem('kanban_compact', isCompact ? '1' : '');
+  document.getElementById('compactViewBtn').classList.toggle('active', isCompact);
+}
+
+function applyStoredPreferences() {
+  if (localStorage.getItem('kanban_darkMode')) {
+    document.body.classList.add('dark');
+    document.getElementById('darkModeBtn').classList.add('active');
+    document.getElementById('darkModeBtn').textContent = '☀️';
+  }
+  if (localStorage.getItem('kanban_compact')) {
+    document.body.classList.add('compact');
+    document.getElementById('compactViewBtn').classList.add('active');
+  }
 }
 
 // ─── KEYBOARD SHORTCUTS ──────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeArchive(); closeBoardSwitcher(); }
+  if (e.key === 'Escape') {
+    if (composingCol) { closeComposer(); return; }
+    closeModal(); closeArchive(); closeBoardSwitcher();
+  }
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey) return;
+  if (!dirHandle) return;
+  if (e.key === '/') { e.preventDefault(); document.getElementById('searchInput').focus(); }
+  if ((e.key === 'n' || e.key === 'N') && !openCardId) { e.preventDefault(); openComposer('todo'); }
 });
 document.addEventListener('click', e => {
   if (!e.target.closest('.board-switcher-wrap')) closeBoardSwitcher();
 });
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
+applyStoredPreferences();
 init();
 // ─── OCEAN BACKGROUND ────────────────────────────────────────────────────────
 (function() {
