@@ -1199,15 +1199,17 @@
   </div>
 
   <div class="header-filters">
-    <button class="filter-pill active" data-label="all" onclick="setLabelFilter('all')">All</button>
-    <button class="filter-pill" data-label="feature" onclick="setLabelFilter('feature')">🚀 Feature</button>
-    <button class="filter-pill" data-label="discovery" onclick="setLabelFilter('discovery')">🔍 Discovery</button>
-    <button class="filter-pill" data-label="stakeholder" onclick="setLabelFilter('stakeholder')">👥 Stakeholder</button>
-    <button class="filter-pill" data-label="planning" onclick="setLabelFilter('planning')">🗺️ Planning</button>
-    <button class="filter-pill" data-label="release" onclick="setLabelFilter('release')">🚢 Release</button>
-    <button class="filter-pill" data-label="bug" onclick="setLabelFilter('bug')">🐛 Bug</button>
-    <button class="filter-pill" data-label="admin" onclick="setLabelFilter('admin')">📋 Admin</button>
-    <div style="width:1px;height:16px;background:rgba(0,0,0,0.12);margin:0 4px;flex-shrink:0"></div>
+    <span id="labelFilterGroup" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="filter-pill active" data-label="all" onclick="setLabelFilter('all')">All</button>
+      <button class="filter-pill" data-label="feature" onclick="setLabelFilter('feature')">🚀 Feature</button>
+      <button class="filter-pill" data-label="discovery" onclick="setLabelFilter('discovery')">🔍 Discovery</button>
+      <button class="filter-pill" data-label="stakeholder" onclick="setLabelFilter('stakeholder')">👥 Stakeholder</button>
+      <button class="filter-pill" data-label="planning" onclick="setLabelFilter('planning')">🗺️ Planning</button>
+      <button class="filter-pill" data-label="release" onclick="setLabelFilter('release')">🚢 Release</button>
+      <button class="filter-pill" data-label="bug" onclick="setLabelFilter('bug')">🐛 Bug</button>
+      <button class="filter-pill" data-label="admin" onclick="setLabelFilter('admin')">📋 Admin</button>
+      <div style="width:1px;height:16px;background:rgba(0,0,0,0.12);margin:0 4px;flex-shrink:0;display:inline-block"></div>
+    </span>
     <button class="priority-filter-pill" data-priority="high"   onclick="setPriorityFilter('high')"   style="color:#b04040">⬆ High</button>
     <button class="priority-filter-pill" data-priority="medium" onclick="setPriorityFilter('medium')" style="color:#a06020">→ Med</button>
     <button class="priority-filter-pill" data-priority="low"    onclick="setPriorityFilter('low')"    style="color:var(--blue)">⬇ Low</button>
@@ -1218,6 +1220,7 @@
   <div class="header-actions">
     <button class="btn-sm btn-icon" id="darkModeBtn"    onclick="toggleDarkMode()"    title="Toggle dark mode">🌙</button>
     <button class="btn-sm btn-icon" id="compactViewBtn" onclick="toggleCompactView()" title="Toggle compact view">☰</button>
+    <button class="btn-sm" onclick="showSummaryPanel()">📊 Summary</button>
     <button class="btn-sm" onclick="showArchive()">🗃 Archive</button>
     <button class="btn-sm" onclick="exportData()">⬇ Export</button>
     <label class="btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
@@ -1274,17 +1277,44 @@
         <div class="priority-row" id="modalPriorityRow"></div>
       </div>
 
-      <!-- Description -->
+      <!-- Owner (feature only) -->
+      <div class="modal-section" id="modalOwnerSection" style="display:none">
+        <div class="modal-section-label">👤 Owner</div>
+        <input type="text" class="modal-input" id="modalOwner" placeholder="Owner name…" oninput="saveModalField('owner', this.value)">
+      </div>
+
+      <!-- Assigned (task only) -->
+      <div class="modal-section" id="modalAssigneeSection" style="display:none">
+        <div class="modal-section-label">👤 Assigned</div>
+        <input type="text" class="modal-input" id="modalAssignee" placeholder="Assignee…" oninput="saveModalField('assignee', this.value)">
+      </div>
+
+      <!-- Linked Feature (task only) -->
+      <div class="modal-section" id="modalFeatureLinkSection" style="display:none">
+        <div class="modal-section-label">🚩 Linked Feature</div>
+        <select class="modal-input" id="modalFeatureSelect" onchange="setTaskFeature(this.value)"></select>
+      </div>
+
+      <!-- Progress + Linked Tasks (feature only) -->
+      <div class="modal-section" id="modalProgressSection" style="display:none">
+        <div class="modal-section-label">
+          Progress <span id="modalProgressFraction" style="font-weight:400;color:var(--text-light);margin-left:4px"></span>
+        </div>
+        <div class="checklist-bar" style="margin-bottom:8px"><div class="checklist-bar-fill" id="modalProgressBarFill" style="width:0%"></div></div>
+        <div id="modalLinkedTasks" style="display:flex;flex-direction:column;gap:2px"></div>
+      </div>
+
+      <!-- Description / Notes -->
       <div class="modal-section">
         <div class="modal-section-label">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          Notes
+          <span id="modalNotesLabel">Notes</span>
         </div>
         <textarea class="modal-textarea" id="modalNotes" placeholder="Add notes, details, ideas…" oninput="saveModalField('notes', this.value)"></textarea>
       </div>
 
       <!-- Dates -->
-      <div class="modal-section">
+      <div class="modal-section" id="modalDatesSection">
         <div class="modal-section-label">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           Dates
@@ -1309,7 +1339,7 @@
       </div>
 
       <!-- Checklist -->
-      <div class="modal-section">
+      <div class="modal-section" id="modalChecklistSection">
         <div class="modal-section-label">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
           Checklist
@@ -1323,7 +1353,7 @@
       </div>
 
       <!-- Photos -->
-      <div class="modal-section">
+      <div class="modal-section" id="modalPhotosSection">
         <div class="modal-section-label">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           Photos
@@ -1340,7 +1370,7 @@
         </div>
       </div>
 
-      <!-- URLs -->
+      <!-- URLs / Links -->
       <div class="modal-section">
         <div class="modal-section-label">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -1351,6 +1381,16 @@
           <input type="text" id="urlLabelInput" placeholder="Label (e.g. Recipe)" style="max-width:130px">
           <input type="url" id="urlValueInput" placeholder="https://…" onkeydown="if(event.key==='Enter') addUrl()">
           <button class="url-add-btn" onclick="addUrl()">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Open Risks (feature only) -->
+      <div class="modal-section" id="modalRisksSection" style="display:none">
+        <div class="modal-section-label">⚠️ Open Risks</div>
+        <div class="checklist-items" id="riskItems"></div>
+        <div class="checklist-add-row">
+          <input type="text" id="riskNewItem" placeholder="Add risk…" onkeydown="if(event.key==='Enter') addRiskItem()">
+          <button class="checklist-add-btn" onclick="addRiskItem()">+ Add</button>
         </div>
       </div>
 
@@ -1372,6 +1412,37 @@
   </div>
 </div>
 
+<!-- BOARD TYPE PICKER -->
+<div class="modal-overlay" id="boardTypeModal" onclick="if(event.target===this) closeBoardTypeModal()">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-header-content">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600">What kind of board?</div>
+      </div>
+      <button class="modal-close" onclick="closeBoardTypeModal()">✕</button>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn-sm primary" style="padding:14px;font-size:14px;text-align:left;line-height:1.5" onclick="chooseBoardType('feature')">
+        🚩 Feature Board<br><span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.85)">Track outcomes & delivery initiatives</span>
+      </button>
+      <button class="btn-sm" style="padding:14px;font-size:14px;text-align:left;line-height:1.5" onclick="chooseBoardType('task')">
+        ✅ Task Board<br><span style="font-weight:400;font-size:12px;color:var(--text-muted)">Track day-to-day execution</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE SUMMARY DASHBOARD -->
+<div class="archive-panel" id="summaryPanel">
+  <div class="archive-inner">
+    <div class="archive-header">
+      <h2>📊 Feature Summary</h2>
+      <button class="modal-close" onclick="closeSummaryPanel()">✕</button>
+    </div>
+    <div class="archive-list" id="summaryList"></div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast">
   <span id="toastMsg"></span>
@@ -1380,13 +1451,41 @@
 
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
-const COLUMNS = [
-  { id: 'consideration', title: 'Consideration', cls: 'col-consideration' },
-  { id: 'todo',          title: 'To Do',          cls: 'col-todo' },
-  { id: 'active',        title: 'Active',          cls: 'col-active' },
-  { id: 'blocked',       title: 'Blocked',         cls: 'col-blocked' },
-  { id: 'done',          title: 'Done',            cls: 'col-done' },
+const LEGACY_COLUMNS = [
+  { id: 'consideration', title: 'Consideration', dot: '#7bbcd8', titleColor: '#2a6888' },
+  { id: 'todo',          title: 'To Do',          dot: '#c9a84c', titleColor: '#8a6820' },
+  { id: 'active',        title: 'Active',          dot: '#2a7fad', titleColor: '#1a5f8a' },
+  { id: 'blocked',       title: 'Blocked',         dot: '#c05555', titleColor: '#a03535' },
+  { id: 'done',          title: 'Done',            dot: '#3a8a6a', titleColor: '#1a6a4a' },
 ];
+
+const FEATURE_COLUMNS = [
+  { id: 'ideas',      title: 'Ideas',        dot: '#a0bcca' },
+  { id: 'discovery',  title: 'Discovery',    dot: '#6a5fa8' },
+  { id: 'ready',      title: 'Ready',        dot: '#c9a84c' },
+  { id: 'inprogress', title: 'In Progress',  dot: '#2a7fad' },
+  { id: 'blocked',    title: 'Blocked',      dot: '#c05555' },
+  { id: 'done',       title: 'Done',         dot: '#3a8a6a' },
+];
+
+const TASK_COLUMNS = [
+  { id: 'todo',    title: 'To Do',       dot: '#c9a84c' },
+  { id: 'active',  title: 'Active',      dot: '#2a7fad' },
+  { id: 'waiting', title: 'Waiting For', dot: '#c97d4e' },
+  { id: 'done',    title: 'Done',        dot: '#3a8a6a' },
+];
+
+function getBoardType(id) {
+  return boards.find(b => b.id === id)?.boardType || 'legacy';
+}
+function getColumnsFor(boardType) {
+  if (boardType === 'feature') return FEATURE_COLUMNS;
+  if (boardType === 'task') return TASK_COLUMNS;
+  return LEGACY_COLUMNS;
+}
+function getActiveColumns() {
+  return getColumnsFor(activeBoardType);
+}
 
 const LABELS = [
   { id: 'feature',     emoji: '🚀', name: 'Feature',     color: '#2a7fad', bg: '#daeef8' },
@@ -1414,6 +1513,8 @@ let _saveDebounce = null;
 let dirHandle = null;
 let boards = [];
 let activeBoardId = null;
+let activeBoardType = 'legacy';
+let linkCache = { featureTitles: {}, tasksByFeature: {} };
 
 // ─── BROWSER DETECTION ───────────────────────────────────────────────────────
 function isChrome() {
@@ -1530,12 +1631,76 @@ function saveState() {
   if (!board) return;
   setSaveStatus('saving');
   writeBoardFile(board.folder, activeBoardId, state)
-    .then(() => setSaveStatus('saved'))
+    .then(() => {
+      setSaveStatus('saved');
+      if (activeBoardType === 'feature' || activeBoardType === 'task') {
+        rebuildLinkCache().then(() => renderAllCards());
+      }
+    })
     .catch(() => { setSaveStatus('error'); showToast('⚠ Could not save — check folder access'); });
 }
 
 // ─── BOARD INDEX ──────────────────────────────────────────────────────────────
 async function saveBoardIndex() { await writeJsonFile('boards.json', boards); }
+
+// ─── CROSS-BOARD LINK CACHE (Feature <-> Task) ────────────────────────────────
+async function rebuildLinkCache() {
+  const cache = { featureTitles: {}, tasksByFeature: {} };
+  for (const b of boards.filter(x => x.boardType === 'feature')) {
+    const data = await readBoardFile(b.folder, b.id);
+    (data?.cards || []).forEach(f => {
+      cache.featureTitles[f.id] = { title: f.title, colId: f.colId, boardId: b.id };
+    });
+  }
+  for (const b of boards.filter(x => x.boardType === 'task')) {
+    const data = await readBoardFile(b.folder, b.id);
+    (data?.cards || []).forEach(t => {
+      if (!t.featureId) return;
+      (cache.tasksByFeature[t.featureId] ??= []).push({ id: t.id, title: t.title, done: t.colId === 'done', boardId: b.id });
+    });
+  }
+  linkCache = cache;
+}
+
+async function navigateToCard(boardId, cardId) {
+  if (!boardId) { showToast('That item no longer exists'); return; }
+  closeModal();
+  closeArchive();
+  closeSummaryPanel();
+  if (boardId !== activeBoardId) await switchBoard(boardId);
+  openCard(cardId);
+}
+
+async function showSummaryPanel() {
+  await rebuildLinkCache();
+  const list = document.getElementById('summaryList');
+  const entries = Object.entries(linkCache.featureTitles);
+  if (entries.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">No features yet</div>';
+  } else {
+    list.innerHTML = entries.map(([id, f]) => {
+      const linked = linkCache.tasksByFeature[id] || [];
+      const done = linked.filter(t => t.done).length;
+      const total = linked.length;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      const color = pct > 75 ? 'var(--green)' : pct >= 25 ? '#c97d4e' : 'var(--red)';
+      return `<div class="archive-item" style="cursor:pointer" onclick="navigateToCard('${f.boardId}','${id}')">
+        <span class="archive-item-title">${escHtml(f.title)}</span>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <div style="width:80px;height:6px;border-radius:3px;background:var(--col-border);overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${color}"></div>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:${color};min-width:34px;text-align:right">${pct}%</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('summaryPanel').classList.add('open');
+}
+
+function closeSummaryPanel() {
+  document.getElementById('summaryPanel')?.classList.remove('open');
+}
 
 // ─── FOLDER PICKER ────────────────────────────────────────────────────────────
 async function pickFolder() {
@@ -1568,13 +1733,14 @@ async function switchBoard(id) {
   document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
   document.querySelector('.filter-pill[data-label="all"]').classList.add('active');
   document.querySelectorAll('.priority-filter-pill').forEach(p => p.classList.remove('active'));
+  await rebuildLinkCache();
   buildBoard();
 }
 
-async function createBoard(name) {
+async function createBoard(name, boardType) {
   const id = genId();
   const folder = boardSlug(name);
-  boards.push({ id, name, folder, created: Date.now() });
+  boards.push({ id, name, folder, boardType, created: Date.now() });
   await saveBoardIndex();
   await writeBoardFile(folder, id, { cards: [], archive: [] });
   return id;
@@ -1601,6 +1767,7 @@ async function deleteBoard(id) {
   if (board?.folder && !siblingUsesFolder) {
     try { await dirHandle.removeEntry(board.folder, { recursive: true }); } catch(e) {}
   }
+  await rebuildLinkCache();
   if (id === activeBoardId) await switchBoard(boards[0].id);
   else renderBoardSwitcherDropdown();
 }
@@ -1634,13 +1801,28 @@ function renderBoardSwitcherDropdown() {
   `;
 }
 
-async function promptNewBoard() {
+let _pendingBoardName = null;
+
+function promptNewBoard() {
   const name = prompt('Board name:');
   if (!name || !name.trim()) return;
   closeBoardSwitcher();
-  const id = await createBoard(name.trim());
+  _pendingBoardName = name.trim();
+  document.getElementById('boardTypeModal').classList.add('open');
+}
+
+function closeBoardTypeModal() {
+  document.getElementById('boardTypeModal').classList.remove('open');
+  _pendingBoardName = null;
+}
+
+async function chooseBoardType(boardType) {
+  const name = _pendingBoardName;
+  closeBoardTypeModal();
+  if (!name) return;
+  const id = await createBoard(name, boardType);
   await switchBoard(id);
-  showToast(`Board "${name.trim()}" created`);
+  showToast(`${boardType === 'feature' ? 'Feature' : 'Task'} board "${name}" created`);
 }
 
 function promptRenameBoard(id) {
@@ -1686,6 +1868,7 @@ async function initBoards() {
   state = await readBoardFile(startBoard.folder, startId) || { cards: [], archive: [] };
   document.getElementById('activeBoardName').textContent = startBoard?.name || 'Board';
   await preloadImages();
+  await rebuildLinkCache();
   buildBoard();
 }
 
@@ -1711,18 +1894,21 @@ function genId() {
 // ─── RENDER ─────────────────────────────────────────────────────────────────
 
 function buildBoard() {
+  activeBoardType = getBoardType(activeBoardId);
+  const labelGroup = document.getElementById('labelFilterGroup');
+  if (labelGroup) labelGroup.style.display = activeBoardType === 'legacy' ? 'flex' : 'none';
   const board = document.getElementById('board');
   board.innerHTML = '';
-  COLUMNS.forEach(col => {
+  getActiveColumns().forEach(col => {
     const el = document.createElement('div');
-    el.className = `column ${col.cls}`;
+    el.className = 'column';
     el.id = `col-${col.id}`;
     el.setAttribute('data-col', col.id);
     el.innerHTML = `
       <div class="col-header">
         <div class="col-title-wrap">
-          <div class="col-dot"></div>
-          <span class="col-title">${col.title}</span>
+          <div class="col-dot" style="background:${col.dot}"></div>
+          <span class="col-title" style="color:${col.titleColor || col.dot}">${col.title}</span>
         </div>
         <span class="col-count" id="count-${col.id}">0</span>
       </div>
@@ -1749,7 +1935,7 @@ function buildBoard() {
   renderAllCards();
 
   // "Archive all" button on Done column header
-  const doneHeader = document.querySelector('.col-done .col-header');
+  const doneHeader = document.querySelector('#col-done .col-header');
   if (doneHeader && !doneHeader.querySelector('.btn-archive-done')) {
     const btn = document.createElement('button');
     btn.className = 'btn-sm btn-archive-done';
@@ -1762,7 +1948,7 @@ function buildBoard() {
 }
 
 function renderAllCards() {
-  COLUMNS.forEach(col => {
+  getActiveColumns().forEach(col => {
     const container = document.getElementById(`cards-${col.id}`);
     container.innerHTML = '';
     const colCards = state.cards.filter(c => c.colId === col.id);
@@ -1797,7 +1983,8 @@ function buildCardEl(card) {
   };
 
   const label = LABELS.find(l => l.id === card.label);
-  const colIdx = COLUMNS.findIndex(c => c.id === card.colId);
+  const cols = getActiveColumns();
+  const colIdx = cols.findIndex(c => c.id === card.colId);
 
   // Cover photo
   let photoHtml = '';
@@ -1878,18 +2065,49 @@ function buildCardEl(card) {
     </span>`;
   }
 
+  // Feature-only: owner line, task progress bar, risk badge, links count
+  let ownerHtml = '', featureProgressHtml = '', riskBadgeHtml = '';
+  if (activeBoardType === 'feature') {
+    if (card.owner) ownerHtml = `<span class="card-meta-item">👤 ${escHtml(card.owner)}</span>`;
+    const linked = linkCache.tasksByFeature[card.id] || [];
+    if (linked.length > 0) {
+      const done = linked.filter(t => t.done).length;
+      const pct = Math.round((done / linked.length) * 100);
+      featureProgressHtml = `<div class="card-checklist-preview">
+        <div class="checklist-bar"><div class="checklist-bar-fill" style="width:${pct}%"></div></div>
+        <span class="card-meta-item">${done}/${linked.length} tasks</span>
+      </div>`;
+    }
+    if (card.risks && card.risks.length > 0) {
+      riskBadgeHtml = `<span class="card-meta-item" style="color:var(--red)">⚠ ${card.risks.length} risk${card.risks.length !== 1 ? 's' : ''}</span>`;
+    }
+    if (card.links && card.links.length > 0) {
+      linksHtml = `<span class="card-meta-item">
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        ${card.links.length}
+      </span>`;
+    }
+  }
+
+  // Task-only: linked feature pill
+  let linkedFeatureHtml = '';
+  if (activeBoardType === 'task' && card.featureId) {
+    const f = linkCache.featureTitles[card.featureId];
+    linkedFeatureHtml = `<div class="card-label" style="background:var(--accent-light);color:var(--accent);cursor:pointer" onclick="event.stopPropagation(); navigateToCard('${f ? f.boardId : ''}', '${card.featureId}')">🚩 ${escHtml(f ? f.title : 'Deleted feature')}</div>`;
+  }
+
   el.innerHTML = `
     <button class="card-delete-btn" onclick="deleteCard('${card.id}', event)" title="Delete">✕</button>
     ${photoHtml}
-    ${priorityHtml}${labelHtml}
+    ${priorityHtml}${labelHtml}${linkedFeatureHtml}
     <div class="card-title">${escHtml(card.title || 'Untitled')}</div>
-    <div class="card-meta">${dueHtml}${linksHtml}${photoCountHtml}</div>
+    <div class="card-meta">${dueHtml}${linksHtml}${photoCountHtml}${ownerHtml}${riskBadgeHtml}</div>
     ${deadlineHtml ? `<div style="margin-top:5px;padding:5px 8px;border-radius:6px;background:${deadlineUrgent ? 'rgba(192,85,85,0.1)' : 'rgba(201,125,78,0.08)'};">${deadlineHtml}</div>` : ''}
-    ${checklistHtml}
+    ${checklistHtml}${featureProgressHtml}
     <div class="card-nav">
       <div class="card-nav-btns">
         <button class="card-nav-btn" title="Move left" onclick="moveCard('${card.id}', -1, event)" ${colIdx === 0 ? 'disabled' : ''}>◀</button>
-        <button class="card-nav-btn" title="Move right" onclick="moveCard('${card.id}', 1, event)" ${colIdx === COLUMNS.length - 1 ? 'disabled' : ''}>▶</button>
+        <button class="card-nav-btn" title="Move right" onclick="moveCard('${card.id}', 1, event)" ${colIdx === cols.length - 1 ? 'disabled' : ''}>▶</button>
       </div>
       <button class="card-open-btn" onclick="openCard('${card.id}')">Details →</button>
     </div>
@@ -1912,12 +2130,13 @@ function cardMatchesFilter(card) {
   const q = currentSearchFilter.toLowerCase();
   const matchesSearch = !q ||
     (card.title || '').toLowerCase().includes(q) ||
-    (card.notes || '').toLowerCase().includes(q);
+    (card.notes || '').toLowerCase().includes(q) ||
+    (card.description || '').toLowerCase().includes(q);
   return matchesLabel && matchesPriority && matchesSearch;
 }
 
 function applyFilters() {
-  COLUMNS.forEach(col => {
+  getActiveColumns().forEach(col => {
     const colCards = state.cards.filter(c => c.colId === col.id);
     let visible = 0;
     colCards.forEach(card => {
@@ -1985,18 +2204,23 @@ function closeComposer() {
   composingCol = null;
 }
 
+function makeNewCard(colId, title) {
+  const base = { id: genId(), colId, title, priority: '', createdAt: Date.now() };
+  if (activeBoardType === 'feature') {
+    return { ...base, description: '', owner: '', links: [], risks: [] };
+  }
+  if (activeBoardType === 'task') {
+    return { ...base, featureId: '', assignee: '', notes: '', dueDate: '', deadline: '', checklist: [], photos: [], urls: [] };
+  }
+  return { ...base, label: '', notes: '', dueDate: '', deadline: '', checklist: [], photos: [], urls: [] };
+}
+
 function submitComposer(colId) {
   const ta = document.getElementById(`composer-text-${colId}`);
   const title = (ta ? ta.value : '').trim();
   closeComposer();
   if (!title) return;
-  const card = {
-    id: genId(), colId, title,
-    label: '', notes: '', priority: '',
-    dueDate: '', deadline: '',
-    checklist: [], photos: [], urls: [],
-    createdAt: Date.now(),
-  };
+  const card = makeNewCard(colId, title);
   state.cards.push(card);
   saveState();
   renderAllCards();
@@ -2032,10 +2256,11 @@ function moveCard(id, dir, event) {
   event.stopPropagation();
   const card = state.cards.find(c => c.id === id);
   if (!card) return;
-  const colIdx = COLUMNS.findIndex(c => c.id === card.colId);
+  const cols = getActiveColumns();
+  const colIdx = cols.findIndex(c => c.id === card.colId);
   const newIdx = colIdx + dir;
-  if (newIdx < 0 || newIdx >= COLUMNS.length) return;
-  card.colId = COLUMNS[newIdx].id;
+  if (newIdx < 0 || newIdx >= cols.length) return;
+  card.colId = cols[newIdx].id;
   saveState();
   renderAllCards();
 }
@@ -2142,19 +2367,19 @@ function openCard(id) {
   openCardId = id;
   const card = state.cards.find(c => c.id === id);
   if (!card) return;
+  const kind = activeBoardType; // 'legacy' | 'feature' | 'task'
 
   // Title
   const titleEl = document.getElementById('modalTitle');
   titleEl.value = card.title || '';
   autoResize(titleEl);
 
-  // Notes
-  document.getElementById('modalNotes').value = card.notes || '';
+  // Notes / Description
+  document.getElementById('modalNotesLabel').textContent = kind === 'feature' ? 'Description' : 'Notes';
+  document.getElementById('modalNotes').value = (kind === 'feature' ? card.description : card.notes) || '';
 
-  // Due date
+  // Due date / Deadline
   document.getElementById('modalDueDate').value = card.dueDate || '';
-
-  // Deadline
   document.getElementById('modalDeadline').value = card.deadline || '';
 
   // Status buttons
@@ -2163,26 +2388,121 @@ function openCard(id) {
   // Priority
   renderPriorityModal(card);
 
-  // Label select
-  renderLabelSelect(card);
+  // Label select — legacy only
+  document.getElementById('modalLabelSelect').style.display = kind === 'legacy' ? '' : 'none';
+  if (kind === 'legacy') renderLabelSelect(card);
 
-  // Checklist
-  renderChecklistModal(card);
+  // Section visibility per kind
+  document.getElementById('modalDatesSection').style.display = kind === 'feature' ? 'none' : '';
+  document.getElementById('modalChecklistSection').style.display = kind === 'feature' ? 'none' : '';
+  document.getElementById('modalPhotosSection').style.display = kind === 'feature' ? 'none' : '';
+  document.getElementById('modalOwnerSection').style.display = kind === 'feature' ? '' : 'none';
+  document.getElementById('modalAssigneeSection').style.display = kind === 'task' ? '' : 'none';
+  document.getElementById('modalFeatureLinkSection').style.display = kind === 'task' ? '' : 'none';
+  document.getElementById('modalProgressSection').style.display = kind === 'feature' ? '' : 'none';
+  document.getElementById('modalRisksSection').style.display = kind === 'feature' ? '' : 'none';
 
-  // Photos
-  renderPhotosModal(card);
+  if (kind === 'feature') {
+    document.getElementById('modalOwner').value = card.owner || '';
+    renderProgressModal(card);
+    renderRisksModal(card);
+  } else {
+    // Checklist (legacy + task)
+    renderChecklistModal(card);
+    // Photos (legacy + task)
+    renderPhotosModal(card);
+  }
+  if (kind === 'task') {
+    document.getElementById('modalAssignee').value = card.assignee || '';
+    renderFeatureSelectModal(card);
+  }
 
-  // URLs
+  // Links (all kinds — legacy/task use card.urls, feature uses card.links)
   renderUrlsModal(card);
 
   document.getElementById('cardModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
+function renderProgressModal(card) {
+  const linked = linkCache.tasksByFeature[card.id] || [];
+  const done = linked.filter(t => t.done).length;
+  const total = linked.length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('modalProgressFraction').textContent = total > 0 ? `${done}/${total} tasks — ${pct}%` : 'No linked tasks';
+  document.getElementById('modalProgressBarFill').style.width = `${pct}%`;
+  document.getElementById('modalLinkedTasks').innerHTML = linked.map(t => `
+    <div style="display:flex;align-items:center;gap:6px;padding:4px 2px;cursor:pointer;font-size:13px"
+      onclick="navigateToCard('${t.boardId}','${t.id}')">
+      <span style="color:${t.done ? 'var(--green)' : 'var(--text-light)'}">${t.done ? '✓' : '○'}</span>
+      <span style="${t.done ? 'text-decoration:line-through;color:var(--text-muted)' : ''}">${escHtml(t.title)}</span>
+    </div>
+  `).join('');
+}
+
+function renderRisksModal(card) {
+  const container = document.getElementById('riskItems');
+  if (!card.risks || card.risks.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = card.risks.map((text, idx) => `
+    <div class="checklist-item">
+      <input type="text" class="checklist-item-text" value="${escHtml(text)}"
+        onblur="updateRiskText(${idx}, this.value)" onkeydown="if(event.key==='Enter') this.blur()">
+      <button class="checklist-item-del" onclick="deleteRiskItem(${idx})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addRiskItem() {
+  const input = document.getElementById('riskNewItem');
+  const text = input.value.trim();
+  if (!text || !openCardId) return;
+  const card = state.cards.find(c => c.id === openCardId);
+  if (!card) return;
+  if (!card.risks) card.risks = [];
+  card.risks.push(text);
+  saveState();
+  input.value = '';
+  renderRisksModal(card);
+  renderAllCards();
+}
+
+function updateRiskText(idx, text) {
+  const card = state.cards.find(c => c.id === openCardId);
+  if (!card) return;
+  card.risks[idx] = text;
+  saveState();
+  renderAllCards();
+}
+
+function deleteRiskItem(idx) {
+  const card = state.cards.find(c => c.id === openCardId);
+  if (!card) return;
+  card.risks.splice(idx, 1);
+  saveState();
+  renderRisksModal(card);
+  renderAllCards();
+}
+
+function renderFeatureSelectModal(card) {
+  const sel = document.getElementById('modalFeatureSelect');
+  const options = Object.entries(linkCache.featureTitles)
+    .map(([id, f]) => `<option value="${id}" ${card.featureId === id ? 'selected' : ''}>${escHtml(f.title)}</option>`)
+    .join('');
+  sel.innerHTML = `<option value="">None (standalone)</option>${options}`;
+}
+
+function setTaskFeature(featureId) {
+  const card = state.cards.find(c => c.id === openCardId);
+  if (!card) return;
+  card.featureId = featureId;
+  saveState();
+  renderAllCards();
+}
+
 function renderModalStatus(card) {
   const row = document.getElementById('modalStatusRow');
   row.innerHTML = `<span class="status-label">Move to:</span>` +
-    COLUMNS.map(col =>
+    getActiveColumns().map(col =>
       `<button class="status-btn ${card.colId === col.id ? 'active-status' : ''}"
         onclick="setCardCol('${card.id}', '${col.id}')">${col.title}</button>`
     ).join('');
@@ -2243,8 +2563,9 @@ function saveModalField(field, value) {
   if (!openCardId) return;
   const card = state.cards.find(c => c.id === openCardId);
   if (!card) return;
-  card[field] = value;
-  if (field === 'notes') {
+  const actualField = (field === 'notes' && activeBoardType === 'feature') ? 'description' : field;
+  card[actualField] = value;
+  if (['notes', 'description', 'owner', 'assignee'].includes(actualField)) {
     clearTimeout(_saveDebounce);
     _saveDebounce = setTimeout(saveState, 350);
   } else {
@@ -2409,10 +2730,13 @@ async function deletePhoto(idx) {
 
 // ─── URLS ─────────────────────────────────────────────────────────────────────
 
+function urlsKey() { return activeBoardType === 'feature' ? 'links' : 'urls'; }
+
 function renderUrlsModal(card) {
+  const key = urlsKey();
   const list = document.getElementById('urlList');
-  if (!card.urls || card.urls.length === 0) { list.innerHTML = ''; return; }
-  list.innerHTML = card.urls.map((u, idx) => `
+  if (!card[key] || card[key].length === 0) { list.innerHTML = ''; return; }
+  list.innerHTML = card[key].map((u, idx) => `
     <div class="url-item">
       ${u.label ? `<span class="url-item-label">${escHtml(u.label)}</span>` : ''}
       <a href="${/^https?:\/\//i.test(u.url) ? escHtml(u.url) : '#'}" target="_blank" rel="noopener">${escHtml(u.url)}</a>
@@ -2429,8 +2753,9 @@ function addUrl() {
   if (!/^https?:\/\//i.test(finalUrl)) finalUrl = 'https://' + finalUrl;
   const card = state.cards.find(c => c.id === openCardId);
   if (!card) return;
-  if (!card.urls) card.urls = [];
-  card.urls.push({ label, url: finalUrl });
+  const key = urlsKey();
+  if (!card[key]) card[key] = [];
+  card[key].push({ label, url: finalUrl });
   saveState();
   document.getElementById('urlLabelInput').value = '';
   document.getElementById('urlValueInput').value = '';
@@ -2441,7 +2766,7 @@ function addUrl() {
 function deleteUrl(idx) {
   const card = state.cards.find(c => c.id === openCardId);
   if (!card) return;
-  card.urls.splice(idx, 1);
+  card[urlsKey()].splice(idx, 1);
   saveState();
   renderUrlsModal(card);
 }
@@ -2566,14 +2891,6 @@ function handleToastAction() {
 }
 
 // ─── STATS BAR ───────────────────────────────────────────────────────────────
-const COL_DOTS = {
-  consideration: '#a0bcca',
-  todo:          '#2a7fad',
-  active:        '#3a8a6a',
-  blocked:       '#c05555',
-  done:          '#9a9082',
-};
-
 function updateStatsBar() {
   const el = document.getElementById('statsBar');
   if (!el) return;
@@ -2584,11 +2901,10 @@ function updateStatsBar() {
                      new Date(c.deadline + 'T00:00:00') < now).length;
   const highPri  = state.cards.filter(c => c.colId !== 'done' && c.priority === 'high').length;
 
-  const colHtml = COLUMNS.map(col => {
+  const colHtml = getActiveColumns().map(col => {
     const count = state.cards.filter(c => c.colId === col.id).length;
-    const dot   = COL_DOTS[col.id] || '#aaa';
     return `<div class="stats-col">
-      <span class="stats-col-dot" style="background:${dot}"></span>
+      <span class="stats-col-dot" style="background:${col.dot}"></span>
       <span class="stats-col-name">${col.title}</span>
       <span class="stats-col-count">${count}</span>
     </div>`;
@@ -2653,13 +2969,13 @@ function applyStoredPreferences() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (composingCol) { closeComposer(); return; }
-    closeModal(); closeArchive(); closeBoardSwitcher();
+    closeModal(); closeArchive(); closeBoardSwitcher(); closeBoardTypeModal(); closeSummaryPanel();
   }
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey) return;
   if (!dirHandle) return;
   if (e.key === '/') { e.preventDefault(); document.getElementById('searchInput').focus(); }
-  if ((e.key === 'n' || e.key === 'N') && !openCardId) { e.preventDefault(); openComposer('todo'); }
+  if ((e.key === 'n' || e.key === 'N') && !openCardId) { e.preventDefault(); openComposer(getActiveColumns()[0].id); }
 });
 document.addEventListener('click', e => {
   if (!e.target.closest('.board-switcher-wrap')) closeBoardSwitcher();
