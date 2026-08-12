@@ -66,8 +66,12 @@
   body.dark .priority-filter-pill { background: rgba(18,32,48,0.9); border-color: rgba(50,80,110,0.5); }
   body.dark .archive-item { border-color: rgba(50,80,110,0.4); }
   body.dark .archive-panel { background: #14253a; }
+  body.dark .archive-inner { background: #14253a; color: var(--text); }
+  body.dark .archive-header { border-bottom-color: rgba(50,80,110,0.4); }
+  body.dark .modal-close { background: #0d1825; border-color: rgba(50,80,110,0.6); }
   body.dark .bs-dropdown { background: #14253a; border-color: rgba(50,80,110,0.5); }
   body.dark .composer-textarea { background: #0d1825; color: var(--text); }
+  body.dark .composer-template-select { background: #0d1825; border-color: rgba(50,80,110,0.6); }
   body.dark .photo-drop-zone { background: rgba(18,32,48,0.6); border-color: rgba(50,80,110,0.5); }
   body.dark .checklist-item input[type=checkbox] { accent-color: var(--accent); }
   body.dark .card-label { opacity: 0.9; }
@@ -1036,6 +1040,11 @@
     font-size: 13px; color: var(--text); resize: none; outline: none;
     box-shadow: 0 2px 8px rgba(42,127,173,0.12); background: white;
   }
+  .composer-template-select {
+    width: 100%; margin-top: 6px; border: 1px solid var(--col-border); border-radius: 7px;
+    padding: 5px 8px; font-family: 'DM Sans', sans-serif; font-size: 12px;
+    color: var(--text); background: white;
+  }
   .composer-btns { display: flex; gap: 7px; margin-top: 7px; }
   .composer-submit {
     padding: 7px 15px; background: var(--accent); color: white;
@@ -1219,6 +1228,7 @@
     </svg>
     <input type="text" id="searchInput" placeholder="Search cards…" oninput="filterCards()">
   </div>
+  <button class="btn-sm btn-icon" id="globalSearchBtn" onclick="runGlobalSearch()" title="Search all boards">🌐</button>
 
   <div class="header-filters">
     <span id="labelFilterGroup" style="display:flex;gap:6px;flex-wrap:wrap">
@@ -1244,6 +1254,8 @@
     <button class="btn-sm btn-icon" id="compactViewBtn" onclick="toggleCompactView()" title="Toggle compact view">☰</button>
     <button class="btn-sm btn-icon" id="remindersBtn"    onclick="toggleReminders()"   title="Toggle due-date reminders">🔔</button>
     <button class="btn-sm" onclick="showSummaryPanel()">📊 Summary</button>
+    <button class="btn-sm" onclick="showAgendaPanel()">📅 Agenda</button>
+    <button class="btn-sm" onclick="showTemplatesPanel()">📐 Templates</button>
     <button class="btn-sm" onclick="showArchive()">🗃 Archive</button>
     <button class="btn-sm" onclick="exportData()">⬇ Export</button>
     <label class="btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
@@ -1298,6 +1310,7 @@
         <div class="modal-label-select" id="modalLabelSelect"></div>
         <textarea class="modal-title-input" id="modalTitle" rows="2" placeholder="Card title…" oninput="saveModalField('title', this.value); autoResize(this)"></textarea>
       </div>
+      <button class="btn-sm" style="flex-shrink:0" onclick="saveCardAsTemplate()" title="Save this card's checklist/label/priority/notes as a reusable template">💾 Template</button>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -1514,6 +1527,39 @@
   </div>
 </div>
 
+<!-- AGENDA (ALL BOARDS) -->
+<div class="archive-panel" id="agendaPanel">
+  <div class="archive-inner">
+    <div class="archive-header">
+      <h2>📅 Agenda</h2>
+      <button class="modal-close" onclick="closeAgendaPanel()">✕</button>
+    </div>
+    <div class="archive-list" id="agendaList"></div>
+  </div>
+</div>
+
+<!-- GLOBAL SEARCH (ALL BOARDS) -->
+<div class="archive-panel" id="globalSearchPanel">
+  <div class="archive-inner">
+    <div class="archive-header">
+      <h2>🌐 Search All Boards</h2>
+      <button class="modal-close" onclick="closeGlobalSearchPanel()">✕</button>
+    </div>
+    <div class="archive-list" id="globalSearchList"></div>
+  </div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="archive-panel" id="templatesPanel">
+  <div class="archive-inner">
+    <div class="archive-header">
+      <h2>📐 Templates</h2>
+      <button class="modal-close" onclick="closeTemplatesPanel()">✕</button>
+    </div>
+    <div class="archive-list" id="templatesList"></div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast">
   <span id="toastMsg"></span>
@@ -1593,6 +1639,7 @@ let focusedCardId = null;         // keyboard-navigation focus (distinct from se
 let notificationsEnabled = false; // reminders
 let _reminderInterval = null;
 let _notifiedToday = new Set();
+let templates = [];               // saved card templates, persisted to templates.json
 
 // ─── BROWSER DETECTION ───────────────────────────────────────────────────────
 function supportsFileSystemAccess() {
@@ -1718,6 +1765,13 @@ function saveState() {
 
 // ─── BOARD INDEX ──────────────────────────────────────────────────────────────
 async function saveBoardIndex() { await writeJsonFile('boards.json', boards); }
+async function saveTemplates() {
+  try {
+    await writeJsonFile('templates.json', templates);
+  } catch (e) {
+    showToast('⚠ Could not save templates — check folder access');
+  }
+}
 
 // ─── CROSS-BOARD LINK CACHE (Feature <-> Task) ────────────────────────────────
 async function rebuildLinkCache() {
@@ -1738,6 +1792,95 @@ async function rebuildLinkCache() {
   linkCache = cache;
 }
 
+// ─── GLOBAL SEARCH (ALL BOARDS) ───────────────────────────────────────────────
+async function runGlobalSearch() {
+  const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  if (!q) { showToast('Type a search term first'); return; }
+  const list = document.getElementById('globalSearchList');
+  list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">Searching…</div>';
+  document.getElementById('globalSearchPanel').classList.add('open');
+
+  const results = [];
+  for (const b of boards) {
+    const data = await readBoardFile(b.folder, b.id);
+    (data?.cards || []).forEach(card => {
+      const matches = (card.title || '').toLowerCase().includes(q) ||
+        (card.notes || '').toLowerCase().includes(q) ||
+        (card.description || '').toLowerCase().includes(q);
+      if (matches) results.push({ boardId: b.id, boardName: b.name, card });
+    });
+  }
+
+  if (results.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">No matches</div>';
+    return;
+  }
+  list.innerHTML = results.map(r => `
+    <div class="archive-item" style="cursor:pointer" onclick="navigateToCard('${r.boardId}','${r.card.id}')">
+      <span class="archive-item-title">${escHtml(r.card.title || 'Untitled')}
+        <span style="color:var(--text-light);font-weight:400"> · ${escHtml(r.boardName)}</span>
+      </span>
+    </div>
+  `).join('');
+}
+
+function closeGlobalSearchPanel() {
+  document.getElementById('globalSearchPanel')?.classList.remove('open');
+}
+
+// ─── AGENDA (ALL BOARDS, DUE DATES) ───────────────────────────────────────────
+async function showAgendaPanel() {
+  const list = document.getElementById('agendaList');
+  list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">Loading…</div>';
+  document.getElementById('agendaPanel').classList.add('open');
+
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const entries = [];
+  for (const b of boards) {
+    const data = await readBoardFile(b.folder, b.id);
+    (data?.cards || []).forEach(card => {
+      if (card.colId === 'done') return;
+      const dateStr = card.deadline || card.dueDate;
+      if (!dateStr) return;
+      const d = new Date(dateStr + 'T00:00:00');
+      const days = Math.ceil((d - now) / 86400000);
+      const bucket = days < 0 ? 'overdue' : days <= 3 ? 'soon' : 'upcoming';
+      entries.push({ boardId: b.id, boardName: b.name, card, dateStr, d, days, bucket, isDeadline: !!card.deadline });
+    });
+  }
+  entries.sort((a, b) => a.d - b.d);
+
+  if (entries.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">Nothing due</div>';
+    return;
+  }
+
+  const buckets = [
+    { id: 'overdue',  label: '⚠ Overdue' },
+    { id: 'soon',     label: '⏳ Due soon' },
+    { id: 'upcoming', label: '📅 Upcoming' },
+  ];
+  list.innerHTML = buckets.map(bucket => {
+    const items = entries.filter(e => e.bucket === bucket.id);
+    if (items.length === 0) return '';
+    const rows = items.map(e => {
+      const fmt = e.d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+      const color = bucket.id === 'overdue' ? 'var(--red)' : bucket.id === 'soon' ? '#c97d4e' : 'var(--text-muted)';
+      return `<div class="archive-item" style="cursor:pointer" onclick="navigateToCard('${e.boardId}','${e.card.id}')">
+        <span class="archive-item-title">${escHtml(e.card.title || 'Untitled')}
+          <span style="color:var(--text-light);font-weight:400"> · ${escHtml(e.boardName)}</span>
+        </span>
+        <span style="color:${color};font-weight:600;font-size:12px;flex-shrink:0">${e.isDeadline ? '⚠ ' : ''}${fmt}</span>
+      </div>`;
+    }).join('');
+    return `<div style="padding:10px 16px 4px;font-size:11.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px">${bucket.label}</div>${rows}`;
+  }).join('');
+}
+
+function closeAgendaPanel() {
+  document.getElementById('agendaPanel')?.classList.remove('open');
+}
+
 function getOpenDependencyCount(feature) {
   return (feature.dependsOn || []).filter(id => {
     const f = linkCache.featureTitles[id];
@@ -1756,6 +1899,8 @@ async function navigateToCard(boardId, cardId) {
   closeModal();
   closeArchive();
   closeSummaryPanel();
+  closeAgendaPanel();
+  closeGlobalSearchPanel();
   if (boardId !== activeBoardId) await switchBoard(boardId);
   openCard(cardId);
 }
@@ -1931,6 +2076,7 @@ function promptRenameBoard(id) {
 // ─── APP INIT ────────────────────────────────────────────────────────────────
 async function initBoards() {
   boards = await readJsonFile('boards.json') || [];
+  templates = await readJsonFile('templates.json') || [];
 
   if (boards.length === 0) {
     // First run — migrate any existing localStorage data
@@ -2015,6 +2161,7 @@ function buildBoard() {
       <div class="col-composer" id="composer-${col.id}">
         <textarea class="composer-textarea" id="composer-text-${col.id}" placeholder="Card title…" rows="2"
           onkeydown="onComposerKey(event, '${col.id}')"></textarea>
+        <select class="composer-template-select" id="composer-template-${col.id}" style="display:none"></select>
         <div class="composer-btns">
           <button class="composer-submit" onclick="submitComposer('${col.id}')">Add card</button>
           <button class="composer-cancel" onclick="closeComposer()">✕</button>
@@ -2438,6 +2585,72 @@ function filterCards() {
   applyFilters();
 }
 
+// ─── TEMPLATES ───────────────────────────────────────────────────────────────
+function renderComposerTemplateOptions(colId) {
+  const select = document.getElementById(`composer-template-${colId}`);
+  if (!select) return;
+  const matching = templates.filter(t => t.boardType === activeBoardType);
+  if (matching.length === 0) {
+    select.style.display = 'none';
+    select.innerHTML = '';
+    return;
+  }
+  select.style.display = '';
+  select.innerHTML = `<option value="">No template</option>` +
+    matching.map(t => `<option value="${t.id}">${escHtml(t.name)}</option>`).join('');
+}
+
+function saveCardAsTemplate() {
+  const card = state.cards.find(c => c.id === openCardId);
+  if (!card) return;
+  const name = prompt('Template name:', card.title || 'Untitled');
+  if (!name || !name.trim()) return;
+  templates.push({
+    id: genId(),
+    name: name.trim(),
+    boardType: activeBoardType,
+    priority: card.priority || '',
+    label: card.label || '',
+    notes: card.notes || '',
+    checklist: (card.checklist || []).map(i => ({ text: i.text, done: false })),
+  });
+  saveTemplates();
+  showToast(`Template "${name.trim()}" saved`);
+}
+
+function showTemplatesPanel() {
+  renderTemplatesList();
+  document.getElementById('templatesPanel').classList.add('open');
+}
+
+function closeTemplatesPanel() {
+  document.getElementById('templatesPanel')?.classList.remove('open');
+}
+
+function renderTemplatesList() {
+  const list = document.getElementById('templatesList');
+  if (templates.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px">No templates yet — open a card and click "💾 Template" to save one</div>';
+    return;
+  }
+  const typeIcon = { legacy: '📋', feature: '🚩', task: '✅' };
+  list.innerHTML = templates.map(t => `
+    <div class="archive-item">
+      <span class="archive-item-title">${typeIcon[t.boardType] || ''} ${escHtml(t.name)}</span>
+      <button class="archive-restore-btn" onclick="deleteTemplate('${t.id}')">Delete</button>
+    </div>
+  `).join('');
+}
+
+function deleteTemplate(id) {
+  const tpl = templates.find(t => t.id === id);
+  if (!tpl) return;
+  if (!confirm(`Delete template "${tpl.name}"?`)) return;
+  templates = templates.filter(t => t.id !== id);
+  saveTemplates();
+  renderTemplatesList();
+}
+
 // ─── CARD CRUD ───────────────────────────────────────────────────────────────
 
 function openComposer(colId) {
@@ -2448,6 +2661,7 @@ function openComposer(colId) {
   if (!composer) return;
   composer.classList.add('open');
   if (addBtn) addBtn.style.display = 'none';
+  renderComposerTemplateOptions(colId);
   const ta = document.getElementById(`composer-text-${colId}`);
   if (ta) { ta.value = ''; setTimeout(() => ta.focus(), 0); }
 }
@@ -2475,9 +2689,18 @@ function makeNewCard(colId, title) {
 function submitComposer(colId) {
   const ta = document.getElementById(`composer-text-${colId}`);
   const title = (ta ? ta.value : '').trim();
+  const templateSelect = document.getElementById(`composer-template-${colId}`);
+  const templateId = templateSelect ? templateSelect.value : '';
   closeComposer();
   if (!title) return;
   const card = makeNewCard(colId, title);
+  const tpl = templateId && templates.find(t => t.id === templateId);
+  if (tpl) {
+    card.priority = tpl.priority || '';
+    if ('label' in card) card.label = tpl.label || '';
+    if ('notes' in card) card.notes = tpl.notes || '';
+    if ('checklist' in card) card.checklist = (tpl.checklist || []).map(i => ({ text: i.text, done: false }));
+  }
   state.cards.push(card);
   saveState();
   renderAllCards();
@@ -3555,6 +3778,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (composingCol) { closeComposer(); return; }
     closeModal(); closeArchive(); closeBoardSwitcher(); closeBoardTypeModal(); closeSummaryPanel(); clearSelection();
+    closeAgendaPanel(); closeGlobalSearchPanel(); closeTemplatesPanel();
   }
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.metaKey || e.ctrlKey) return;
