@@ -1231,9 +1231,9 @@
 <div class="fs-overlay" id="chromeSplash" style="display:none">
   <div class="fs-card">
     <div class="fs-icon">🌐</div>
-    <h2>Chrome Required</h2>
-    <p>This board uses the <strong>File System Access API</strong> to save your data directly to a folder on your Mac — no database needed, and no storage limits.</p>
-    <p>This API is only supported in <strong>Google Chrome</strong>. Please open this file in Chrome to continue.</p>
+    <h2>Unsupported Browser</h2>
+    <p>This board uses the <strong>File System Access API</strong> to save your data directly to a folder on your computer — no database needed, and no storage limits.</p>
+    <p>This API is only supported in Chromium-based browsers — <strong>Chrome, Edge, or Opera</strong>. It does not work in Firefox or Safari. Please open this file in a supported browser to continue.</p>
   </div>
 </div>
 
@@ -1242,7 +1242,7 @@
   <div class="fs-card">
     <div class="fs-icon">📁</div>
     <h2>Choose a folder</h2>
-    <p>Pick a folder on your Mac where your boards will be saved as JSON files. A folder on <strong>OneDrive</strong> gives you automatic backups.</p>
+    <p>Pick a folder on your computer where your boards will be saved as JSON files. A folder on <strong>OneDrive</strong> gives you automatic backups.</p>
     <button class="btn-primary" onclick="pickFolder()">Choose folder…</button>
   </div>
 </div>
@@ -1548,10 +1548,8 @@ let linkCache = { featureTitles: {}, tasksByFeature: {} };
 let _editingCommentIdx = null;
 
 // ─── BROWSER DETECTION ───────────────────────────────────────────────────────
-function isChrome() {
-  return /Chrome\//.test(navigator.userAgent)
-    && !/Edg\//.test(navigator.userAgent)
-    && !/OPR\//.test(navigator.userAgent);
+function supportsFileSystemAccess() {
+  return 'showDirectoryPicker' in window;
 }
 
 // ─── INDEXEDDB: persist directory handle across sessions ─────────────────────
@@ -1923,7 +1921,7 @@ async function initBoards() {
 }
 
 async function init() {
-  if (!isChrome()) {
+  if (!supportsFileSystemAccess()) {
     document.getElementById('chromeSplash').style.display = 'flex';
     return;
   }
