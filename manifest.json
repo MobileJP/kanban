@@ -1,0 +1,14 @@
+{
+  "name": "Kanban",
+  "short_name": "Kanban",
+  "description": "A local-first Kanban board that saves boards as JSON files on your computer.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#d4eaf5",
+  "theme_color": "#2a7fad",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

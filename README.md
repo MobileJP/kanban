@@ -12,7 +12,9 @@ A single-file, local-first Kanban board. No server, no database, no build step �
 
 ## Running it
 
-Just open [`index.html`](index.html) in your browser. There's nothing to install and nothing to build.
+Just open [`index.html`](index.html) in your browser — nothing to build.
+
+The app is also PWA-installable (`manifest.json` + a minimal service worker), so Chrome/Edge can offer to install it as its own window with a home-screen/taskbar icon — but only when it's served over `http(s)` or `localhost`. Browsers block service workers on plain `file://` pages, so opening `index.html` directly (double-click) won't show an install prompt; it will if you ever host these files statically (e.g. GitHub Pages, Netlify, or `npx serve` locally) — no server-side code needed, since it's still just static files.
 
 **Browser requirement:** this app saves your data as JSON files directly to a folder on your computer using the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API), so it only works in **Chromium-based browsers — Chrome, Edge, or Opera**. It does not work in Firefox or Safari, which don't support that API.
 

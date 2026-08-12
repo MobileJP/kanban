@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Home Board</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2a7fad">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -3850,6 +3854,10 @@ document.addEventListener('click', e => {
 // ─── INIT ────────────────────────────────────────────────────────────────────
 applyStoredPreferences();
 init();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 // ─── OCEAN BACKGROUND ────────────────────────────────────────────────────────
 (function() {
   const canvas = document.getElementById('seaCanvas');
