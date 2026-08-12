@@ -132,11 +132,12 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255,255,255,0.4);
-    padding: 0 24px;
+    padding: 10px 24px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 20px;
-    height: 60px;
+    gap: 10px 20px;
+    min-height: 60px;
   }
 
   header h1 {
@@ -409,7 +410,7 @@
 
   /* BULK TOOLBAR */
   .bulk-toolbar {
-    position: sticky; top: 60px; z-index: 90;
+    position: relative; z-index: 90;
     background: rgba(180,220,245,0.92);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -1203,8 +1204,6 @@
   @media (max-width: 720px) {
     header {
       position: static;
-      flex-wrap: wrap;
-      height: auto;
       padding: 10px 14px;
       gap: 8px 10px;
     }
