@@ -54,6 +54,7 @@
     --purple-light: rgba(106,95,168,0.2);
   }
   body.dark::before { background: rgba(0,10,20,0.3); }
+  body.dark header { background: rgba(18,32,48,0.88); border-bottom-color: rgba(50,80,110,0.4); }
   body.dark .col-header { border-bottom-color: rgba(50,80,110,0.4); }
   body.dark .modal-overlay { background: rgba(0,10,20,0.7); }
   body.dark .modal { background: #14253a; border-color: rgba(50,80,110,0.5); }
@@ -387,7 +388,7 @@
 
   /* CARDS */
   .card {
-    background: rgba(255,255,255,0.88);
+    background: var(--card-bg);
     border-radius: 9px;
     box-shadow: var(--card-shadow);
     padding: 12px;
