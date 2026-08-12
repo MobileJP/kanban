@@ -75,6 +75,7 @@
   body.dark .modal-close { background: #0d1825; border-color: rgba(50,80,110,0.6); }
   body.dark .bs-dropdown { background: #14253a; border-color: rgba(50,80,110,0.5); }
   body.dark .composer-textarea { background: #0d1825; color: var(--text); }
+  body.dark .header-search input { background: #0d1825; border-color: rgba(50,80,110,0.6); }
   body.dark .composer-template-select { background: #0d1825; border-color: rgba(50,80,110,0.6); }
   body.dark .photo-drop-zone { background: rgba(18,32,48,0.6); border-color: rgba(50,80,110,0.5); }
   body.dark .checklist-item input[type=checkbox] { accent-color: var(--accent); }
@@ -1280,9 +1281,9 @@
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
     </svg>
-    <input type="text" id="searchInput" placeholder="Search cards…" oninput="filterCards()">
+    <input type="text" id="searchInput" placeholder="Search cards…" aria-label="Search cards on this board" oninput="filterCards()">
   </div>
-  <button class="btn-sm btn-icon" id="globalSearchBtn" onclick="runGlobalSearch()" title="Search all boards">🌐</button>
+  <button class="btn-sm btn-icon" id="globalSearchBtn" onclick="runGlobalSearch()" title="Search all boards" aria-label="Search all boards">🌐</button>
 
   <div class="header-filters">
     <span id="labelFilterGroup" style="display:flex;gap:6px;flex-wrap:wrap">
@@ -1304,9 +1305,9 @@
   <div id="alertBadges" class="alert-badges"></div>
 
   <div class="header-actions">
-    <button class="btn-sm btn-icon" id="darkModeBtn"    onclick="toggleDarkMode()"    title="Toggle dark mode">🌙</button>
-    <button class="btn-sm btn-icon" id="compactViewBtn" onclick="toggleCompactView()" title="Toggle compact view">☰</button>
-    <button class="btn-sm btn-icon" id="remindersBtn"    onclick="toggleReminders()"   title="Toggle due-date reminders">🔔</button>
+    <button class="btn-sm btn-icon" id="darkModeBtn"    onclick="toggleDarkMode()"    title="Toggle dark mode"        aria-label="Toggle dark mode"        aria-pressed="false">🌙</button>
+    <button class="btn-sm btn-icon" id="compactViewBtn" onclick="toggleCompactView()" title="Toggle compact view"     aria-label="Toggle compact view"     aria-pressed="false">☰</button>
+    <button class="btn-sm btn-icon" id="remindersBtn"    onclick="toggleReminders()"   title="Toggle due-date reminders" aria-label="Toggle due-date reminders" aria-pressed="false">🔔</button>
     <button class="btn-sm" onclick="showSummaryPanel()">📊 Summary</button>
     <button class="btn-sm" onclick="showAgendaPanel()">📅 Agenda</button>
     <button class="btn-sm" onclick="showTemplatesPanel()">📐 Templates</button>
@@ -1365,7 +1366,7 @@
         <textarea class="modal-title-input" id="modalTitle" rows="2" placeholder="Card title…" oninput="saveModalField('title', this.value); autoResize(this)"></textarea>
       </div>
       <button class="btn-sm" style="flex-shrink:0" onclick="saveCardAsTemplate()" title="Save this card's checklist/label/priority/notes as a reusable template">💾 Template</button>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close card details">✕</button>
     </div>
     <div class="modal-body">
       <div class="modal-status-row" id="modalStatusRow"></div>
@@ -1540,7 +1541,7 @@
       <h2>🗃 Archive</h2>
       <div style="display:flex;gap:8px;align-items:center">
         <button class="btn-sm primary" onclick="clearArchive()">Clear All</button>
-        <button class="modal-close" onclick="closeArchive()">✕</button>
+        <button class="modal-close" onclick="closeArchive()" aria-label="Close archive">✕</button>
       </div>
     </div>
     <div class="archive-list" id="archiveList"></div>
@@ -1554,7 +1555,7 @@
       <div class="modal-header-content">
         <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600">What kind of board?</div>
       </div>
-      <button class="modal-close" onclick="closeBoardTypeModal()">✕</button>
+      <button class="modal-close" onclick="closeBoardTypeModal()" aria-label="Close">✕</button>
     </div>
     <div class="modal-body" style="display:flex;flex-direction:column;gap:10px">
       <button class="btn-sm primary" style="padding:14px;font-size:14px;text-align:left;line-height:1.5" onclick="chooseBoardType('feature')">
@@ -1574,7 +1575,7 @@
       <h2>📊 Feature Summary</h2>
       <div style="display:flex;align-items:center;gap:8px">
         <input type="text" class="modal-input" id="summaryPiFilter" placeholder="Filter by PI…" style="width:140px;padding:5px 9px;font-size:12.5px" oninput="renderSummaryList()">
-        <button class="modal-close" onclick="closeSummaryPanel()">✕</button>
+        <button class="modal-close" onclick="closeSummaryPanel()" aria-label="Close feature summary">✕</button>
       </div>
     </div>
     <div class="archive-list" id="summaryList"></div>
@@ -1586,7 +1587,7 @@
   <div class="archive-inner">
     <div class="archive-header">
       <h2>📅 Agenda</h2>
-      <button class="modal-close" onclick="closeAgendaPanel()">✕</button>
+      <button class="modal-close" onclick="closeAgendaPanel()" aria-label="Close agenda">✕</button>
     </div>
     <div class="archive-list" id="agendaList"></div>
   </div>
@@ -1597,7 +1598,7 @@
   <div class="archive-inner">
     <div class="archive-header">
       <h2>🌐 Search All Boards</h2>
-      <button class="modal-close" onclick="closeGlobalSearchPanel()">✕</button>
+      <button class="modal-close" onclick="closeGlobalSearchPanel()" aria-label="Close search results">✕</button>
     </div>
     <div class="archive-list" id="globalSearchList"></div>
   </div>
@@ -1608,14 +1609,14 @@
   <div class="archive-inner">
     <div class="archive-header">
       <h2>📐 Templates</h2>
-      <button class="modal-close" onclick="closeTemplatesPanel()">✕</button>
+      <button class="modal-close" onclick="closeTemplatesPanel()" aria-label="Close templates">✕</button>
     </div>
     <div class="archive-list" id="templatesList"></div>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">
+<div class="toast" id="toast" role="status" aria-live="polite">
   <span id="toastMsg"></span>
   <button id="toastAction" style="display:none" onclick="handleToastAction()"></button>
 </div>
@@ -2084,8 +2085,8 @@ function renderBoardSwitcherDropdown() {
     <div class="bs-board-item ${b.id === activeBoardId ? 'bs-active' : ''}">
       <span class="bs-board-name" onclick="switchBoard('${b.id}')">${escHtml(b.name)}</span>
       <div class="bs-board-actions">
-        <button class="bs-action-btn" onclick="promptRenameBoard('${b.id}')" title="Rename">✎</button>
-        <button class="bs-action-btn bs-delete" onclick="deleteBoard('${b.id}')" title="Delete">✕</button>
+        <button class="bs-action-btn" onclick="promptRenameBoard('${b.id}')" title="Rename" aria-label="Rename board: ${escHtml(b.name)}">✎</button>
+        <button class="bs-action-btn bs-delete" onclick="deleteBoard('${b.id}')" title="Delete" aria-label="Delete board: ${escHtml(b.name)}">✕</button>
       </div>
     </div>
   `).join('') + `
@@ -2218,7 +2219,7 @@ function buildBoard() {
         <select class="composer-template-select" id="composer-template-${col.id}" style="display:none"></select>
         <div class="composer-btns">
           <button class="composer-submit" onclick="submitComposer('${col.id}')">Add card</button>
-          <button class="composer-cancel" onclick="closeComposer()">✕</button>
+          <button class="composer-cancel" onclick="closeComposer()" aria-label="Cancel adding card">✕</button>
         </div>
       </div>
       <button class="add-card-btn" id="addbtn-${col.id}" onclick="openComposer('${col.id}')">
@@ -2290,7 +2291,7 @@ function buildCardEl(card) {
   // Cover photo
   let photoHtml = '';
   if (card.photos && card.photos.length > 0) {
-    photoHtml = `<img class="card-thumb" src="${getPhotoSrc(card.photos[0])}" alt="">`;
+    photoHtml = `<img class="card-thumb" src="${getPhotoSrc(card.photos[0])}" alt="Photo attached to card: ${escHtml(card.title || 'Untitled')}">`;
   }
 
   // Priority badge
@@ -2420,7 +2421,7 @@ function buildCardEl(card) {
   }
 
   el.innerHTML = `
-    <button class="card-delete-btn" onclick="deleteCard('${card.id}', event)" title="Delete">✕</button>
+    <button class="card-delete-btn" onclick="deleteCard('${card.id}', event)" title="Delete" aria-label="Delete card: ${escHtml(card.title || 'Untitled')}">✕</button>
     ${photoHtml}
     ${priorityHtml}${labelHtml}${linkedFeatureHtml}
     <div class="card-title">${escHtml(card.title || 'Untitled')}</div>
@@ -2429,8 +2430,8 @@ function buildCardEl(card) {
     ${checklistHtml}${featureProgressHtml}
     <div class="card-nav">
       <div class="card-nav-btns">
-        <button class="card-nav-btn" title="Move left" onclick="moveCard('${card.id}', -1, event)" ${colIdx === 0 ? 'disabled' : ''}>◀</button>
-        <button class="card-nav-btn" title="Move right" onclick="moveCard('${card.id}', 1, event)" ${colIdx === cols.length - 1 ? 'disabled' : ''}>▶</button>
+        <button class="card-nav-btn" title="Move left" aria-label="Move card left" onclick="moveCard('${card.id}', -1, event)" ${colIdx === 0 ? 'disabled' : ''}>◀</button>
+        <button class="card-nav-btn" title="Move right" aria-label="Move card right" onclick="moveCard('${card.id}', 1, event)" ${colIdx === cols.length - 1 ? 'disabled' : ''}>▶</button>
       </div>
       <button class="card-open-btn" onclick="openCard('${card.id}')">Details →</button>
     </div>
@@ -3036,7 +3037,7 @@ function renderRisksModal(card) {
     <div class="checklist-item">
       <input type="text" class="checklist-item-text" value="${escHtml(text)}"
         onblur="updateRiskText(${idx}, this.value)" onkeydown="if(event.key==='Enter') this.blur()">
-      <button class="checklist-item-del" onclick="deleteRiskItem(${idx})">✕</button>
+      <button class="checklist-item-del" onclick="deleteRiskItem(${idx})" aria-label="Delete risk">✕</button>
     </div>
   `).join('');
 }
@@ -3103,7 +3104,7 @@ function renderDependenciesModal(card) {
         <span style="color:${done ? 'var(--green)' : 'var(--red)'}">${done ? '✓' : '●'}</span>
         <span style="flex:1;cursor:pointer;${done ? 'text-decoration:line-through;color:var(--text-muted)' : ''}"
           onclick="navigateToCard('${f ? f.boardId : ''}','${id}')">${escHtml(f ? f.title : 'Deleted feature')}</span>
-        <button class="checklist-item-del" style="opacity:1" onclick="removeDependency('${id}')">✕</button>
+        <button class="checklist-item-del" style="opacity:1" onclick="removeDependency('${id}')" aria-label="Remove dependency: ${escHtml(f ? f.title : 'Deleted feature')}">✕</button>
       </div>`;
     }).join('');
   }
@@ -3348,10 +3349,10 @@ function renderChecklistModal(card) {
   prog.textContent = `${done}/${card.checklist.length}`;
   container.innerHTML = card.checklist.map((item, idx) => `
     <div class="checklist-item">
-      <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklistItem(${idx}, this.checked)">
+      <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklistItem(${idx}, this.checked)" aria-label="Mark done: ${escHtml(item.text || 'checklist item')}">
       <input type="text" class="checklist-item-text ${item.done ? 'done' : ''}" value="${escHtml(item.text)}"
-        onblur="updateChecklistText(${idx}, this.value)" onkeydown="if(event.key==='Enter') this.blur()">
-      <button class="checklist-item-del" onclick="deleteChecklistItem(${idx})">✕</button>
+        onblur="updateChecklistText(${idx}, this.value)" onkeydown="if(event.key==='Enter') this.blur()" aria-label="Checklist item text">
+      <button class="checklist-item-del" onclick="deleteChecklistItem(${idx})" aria-label="Delete checklist item">✕</button>
     </div>
   `).join('');
 }
@@ -3402,8 +3403,8 @@ function renderPhotosModal(card) {
   if (!card.photos || card.photos.length === 0) { grid.innerHTML = ''; return; }
   grid.innerHTML = card.photos.map((src, idx) => `
     <div class="photo-thumb-wrap">
-      <img src="${getPhotoSrc(src)}" alt="">
-      <button class="photo-delete" onclick="deletePhoto(${idx})">✕</button>
+      <img src="${getPhotoSrc(src)}" alt="Photo ${idx + 1} for ${escHtml(card.title || 'this card')}">
+      <button class="photo-delete" onclick="deletePhoto(${idx})" aria-label="Delete photo ${idx + 1}">✕</button>
     </div>
   `).join('');
 }
@@ -3490,7 +3491,7 @@ function renderUrlsModal(card) {
     <div class="url-item">
       ${u.label ? `<span class="url-item-label">${escHtml(u.label)}</span>` : ''}
       <a href="${/^https?:\/\//i.test(u.url) ? escHtml(u.url) : '#'}" target="_blank" rel="noopener">${escHtml(u.url)}</a>
-      <button class="url-delete" onclick="deleteUrl(${idx})">✕</button>
+      <button class="url-delete" onclick="deleteUrl(${idx})" aria-label="Delete link${u.label ? ': ' + escHtml(u.label) : ''}">✕</button>
     </div>
   `).join('');
 }
@@ -3757,6 +3758,7 @@ function toggleReminders() {
         notificationsEnabled = true;
         localStorage.setItem('kanban_reminders', '1');
         document.getElementById('remindersBtn').classList.add('active');
+        document.getElementById('remindersBtn').setAttribute('aria-pressed', 'true');
         startReminderInterval();
         scanForReminders();
       }
@@ -3765,6 +3767,7 @@ function toggleReminders() {
     notificationsEnabled = false;
     localStorage.setItem('kanban_reminders', '');
     document.getElementById('remindersBtn').classList.remove('active');
+    document.getElementById('remindersBtn').setAttribute('aria-pressed', 'false');
     stopReminderInterval();
   }
 }
@@ -3774,6 +3777,7 @@ function toggleDarkMode() {
   const isDark = document.body.classList.toggle('dark');
   localStorage.setItem('kanban_darkMode', isDark ? '1' : '');
   document.getElementById('darkModeBtn').classList.toggle('active', isDark);
+  document.getElementById('darkModeBtn').setAttribute('aria-pressed', String(isDark));
   document.getElementById('darkModeBtn').textContent = isDark ? '☀️' : '🌙';
 }
 
@@ -3781,22 +3785,26 @@ function toggleCompactView() {
   const isCompact = document.body.classList.toggle('compact');
   localStorage.setItem('kanban_compact', isCompact ? '1' : '');
   document.getElementById('compactViewBtn').classList.toggle('active', isCompact);
+  document.getElementById('compactViewBtn').setAttribute('aria-pressed', String(isCompact));
 }
 
 function applyStoredPreferences() {
   if (localStorage.getItem('kanban_darkMode')) {
     document.body.classList.add('dark');
     document.getElementById('darkModeBtn').classList.add('active');
+    document.getElementById('darkModeBtn').setAttribute('aria-pressed', 'true');
     document.getElementById('darkModeBtn').textContent = '☀️';
   }
   if (localStorage.getItem('kanban_compact')) {
     document.body.classList.add('compact');
     document.getElementById('compactViewBtn').classList.add('active');
+    document.getElementById('compactViewBtn').setAttribute('aria-pressed', 'true');
   }
   loadNotifiedToday();
   if (localStorage.getItem('kanban_reminders') && 'Notification' in window && Notification.permission === 'granted') {
     notificationsEnabled = true;
     document.getElementById('remindersBtn').classList.add('active');
+    document.getElementById('remindersBtn').setAttribute('aria-pressed', 'true');
     startReminderInterval();
   } else if (localStorage.getItem('kanban_reminders')) {
     localStorage.setItem('kanban_reminders', ''); // permission was revoked outside the app
