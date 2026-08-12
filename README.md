@@ -1,6 +1,6 @@
 # Kanban
 
-A single-file, local-first Kanban board. No server, no database, no build step — open `index.html` in a browser and go.
+A local-first Kanban board. No server, no database, no build step, no framework — open `index.html` in a browser and go.
 
 ## Features
 
@@ -12,7 +12,7 @@ A single-file, local-first Kanban board. No server, no database, no build step �
 
 ## Running it
 
-Just open [`index.html`](index.html) in your browser — nothing to build.
+Just open [`index.html`](index.html) in your browser — nothing to build. The app is split across three files (`index.html`, [`styles.css`](styles.css), [`app.js`](app.js)) loaded with plain `<link>`/`<script src>` tags — deliberately not ES modules, since those are blocked by CORS when opened directly via `file://`. All three need to stay in the same folder.
 
 The app is also PWA-installable (`manifest.json` + a minimal service worker), so Chrome/Edge can offer to install it as its own window with a home-screen/taskbar icon — but only when it's served over `http(s)` or `localhost`. Browsers block service workers on plain `file://` pages, so opening `index.html` directly (double-click) won't show an install prompt; it will if you ever host these files statically (e.g. GitHub Pages, Netlify, or `npx serve` locally) — no server-side code needed, since it's still just static files.
 
